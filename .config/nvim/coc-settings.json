@@ -1,0 +1,16 @@
+{
+  "languageserver": {
+    "go": {
+      "command": "gopls",
+      "rootPatterns": ["go.mod"],
+      "trace.server": "verbose",
+      "filetypes": ["go"]
+    }
+  },
+	"coc.preferences.floatActions": true,
+	"yaml.schemas": {
+		"https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/schemas/v3.0/schema.json": "/*.yaml"
+	},
+	"python.jediEnabled": true,
+	"python.linting.pylintEnabled": true
+}
