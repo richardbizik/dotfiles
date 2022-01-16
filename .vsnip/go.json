@@ -1,0 +1,34 @@
+{
+	"struct": {
+		"prefix": ["str"],
+		"body": [
+			"type $1 struct {",
+			"  $2",
+			"}"
+		]
+	},
+	"for range": {
+		"prefix": ["forr"],
+		"body": [
+			"for $1 := range $2 {",
+			"  $3",
+			"}"
+		]
+	},
+	"function": {
+		"prefix": ["func", "fn"],
+		"body": [
+			"func $1($2) $3{",
+			"  $4",
+			"}"
+		]
+	},
+	"for": {
+		"prefix": ["for"],
+		"body": [
+			"for $1 := 0; $1 < $2; $1++ {",
+			"  $3",
+			"}"
+		]
+	}
+}

@@ -38,20 +38,33 @@ Plug 'morhetz/gruvbox'
 Plug 'tpope/vim-fugitive'
 Plug 'preservim/nerdtree'
 Plug 'mkitt/tabline.vim'
+
 Plug 'neovim/nvim-lspconfig'
+Plug 'hrsh7th/cmp-nvim-lsp'
+Plug 'hrsh7th/cmp-buffer'
+Plug 'hrsh7th/cmp-path'
+Plug 'hrsh7th/cmp-cmdline'
+Plug 'hrsh7th/nvim-cmp'
+Plug 'hrsh7th/cmp-vsnip'
+Plug 'hrsh7th/vim-vsnip'
 Plug 'alloyed/lua-lsp'
+
 Plug 'mfussenegger/nvim-dap'
 Plug 'rcarriga/nvim-dap-ui'
+
 Plug 'nvim-telescope/telescope.nvim'
 Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
 Plug 'nvim-treesitter/nvim-treesitter'
 Plug 'nvim-lua/plenary.nvim'
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
+
+"Plug 'neoclide/coc.nvim', {'branch': 'release'}
+
 Plug 'numToStr/Comment.nvim'
 Plug 'nvim-lualine/lualine.nvim'
 Plug 'kyazdani42/nvim-web-devicons'
 Plug 'airblade/vim-gitgutter'
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
+
 Plug 'tpope/vim-dadbod'
 Plug 'kristijanhusak/vim-dadbod-ui'
 call plug#end()
@@ -65,7 +78,9 @@ colorscheme gruvbox
 source ~/.config/nvim/telescope.vim
 source ~/.config/nvim/lualine.vim
 source ~/.config/nvim/nerdtree.vim
-source ~/.config/nvim/coc.vim
+"source ~/.config/nvim/coc.vim
+source ~/.config/nvim/cmp.vim
+source ~/.config/nvim/vsnip.vim
 source ~/.config/nvim/dap.vim
 source ~/.config/nvim/secret.vim
 

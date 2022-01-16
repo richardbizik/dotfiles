@@ -38,34 +38,35 @@ end
 
 nvim_lsp.gopls.setup{
 	cmd = {'gopls', 'serve'},
-    capabilities = capabilities,
-	    settings = {
-	      gopls = {
-		      experimentalPostfixCompletions = true,
-		      analyses = {
-		        unusedparams = true,
-						unreachable = true,
-		        shadow = true,
-						fieldalignment = true,
-						nilness = true,
-						unusedwrite = true,
-		     },
-		     staticcheck = true,
-		    },
-	    },
+	capabilities = capabilities,
+		settings = {
+			gopls = {
+				experimentalPostfixCompletions = true,
+				analyses = {
+					unusedparams = true,
+					unreachable = true,
+					shadow = true,
+					fieldalignment = true,
+					nilness = true,
+					unusedwrite = true,
+			 },
+			 staticcheck = true,
+			},
+		},
 	}
 
 -- nvim_lsp.pyright.setup{}
 
 
 -- local servers = { 'gopls', 'pyright' }
-local servers = { 'gopls' }
+local servers = { 'gopls', 'yamlls', 'pyright' }
 for _, lsp in ipairs(servers) do
   nvim_lsp[lsp].setup {
     on_attach = on_attach,
     flags = {
       debounce_text_changes = 150,
-    }
+    },
+		capabilities = capabilities,
   }
 end
 
@@ -105,7 +106,7 @@ do
   local default_handler = vim.lsp.handlers[method]
   vim.lsp.handlers[method] = function(err, method, result, client_id, bufnr, config)
     default_handler(err, method, result, client_id, bufnr, config)
-    local diagnostics = vim.lsp.diagnostic.get_all()
+    local diagnostics = vim.diagnostic.get()
     local qflist = {}
     for bufnr, diagnostic in pairs(diagnostics) do
       for _, d in ipairs(diagnostic) do
@@ -116,6 +117,6 @@ do
         table.insert(qflist, d)
       end
     end
-    vim.lsp.util.set_qflist(qflist)
+    vim.fn.setqflist(qflist)
   end
 end
