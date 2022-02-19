@@ -23,9 +23,10 @@ local on_attach = function(client, bufnr)
   buf_set_keymap('n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
   buf_set_keymap('n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
   buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
-  buf_set_keymap('n', '<space>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
-  buf_set_keymap('n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts) buf_set_keymap('n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
-  buf_set_keymap('n', '<space>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
+  buf_set_keymap('n', '<space>e', '<cmd>lua vim.diagnostic.show_line_diagnostics()<CR>', opts)
+  buf_set_keymap('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts) 
+	buf_set_keymap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
+  buf_set_keymap('n', '<space>q', '<cmd>lua vim.diagnostic.set_loclist()<CR>', opts)
 
   -- Set some keybinds conditional on server capabilities
   if client.resolved_capabilities.document_formatting then
@@ -59,7 +60,7 @@ nvim_lsp.gopls.setup{
 
 
 -- local servers = { 'gopls', 'pyright' }
-local servers = { 'gopls', 'yamlls', 'pyright' }
+local servers = { 'gopls', 'yamlls', 'pyright', 'eslint', 'html' }
 for _, lsp in ipairs(servers) do
   nvim_lsp[lsp].setup {
     on_attach = on_attach,
@@ -69,6 +70,7 @@ for _, lsp in ipairs(servers) do
 		capabilities = capabilities,
   }
 end
+
 
 function goimports(timeoutms)
   local context = { source = { organizeImports = true } }
@@ -89,7 +91,8 @@ function goimports(timeoutms)
   -- is a CodeAction, it can have either an edit, a command or both. Edits
   -- should be executed first.
   if action.edit or type(action.command) == "table" then
-    if action.edit then
+    if action.edit ~= nil and action.edit ~= "" then
+			-- print(vim.inspect(action.edit))
       vim.lsp.util.apply_workspace_edit(action.edit)
     end
     if type(action.command) == "table" then

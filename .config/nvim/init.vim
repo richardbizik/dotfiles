@@ -24,9 +24,12 @@ set shortmess+=c
 set termguicolors
 set clipboard+=unnamedplus
 set signcolumn=yes
+set isfname+=@-@ "accept @ as part of filename
 " reselect yanked text while pasting
 xnoremap p pgvy
 
+" exit terminal mode
+tnoremap <esc> <C-\><C-N>
 
 set nocompatible   " be improved, required
 filetype off       " required
@@ -40,6 +43,7 @@ Plug 'preservim/nerdtree'
 Plug 'mkitt/tabline.vim'
 
 Plug 'neovim/nvim-lspconfig'
+Plug 'onsails/lspkind-nvim'
 Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'hrsh7th/cmp-buffer'
 Plug 'hrsh7th/cmp-path'
@@ -47,7 +51,11 @@ Plug 'hrsh7th/cmp-cmdline'
 Plug 'hrsh7th/nvim-cmp'
 Plug 'hrsh7th/cmp-vsnip'
 Plug 'hrsh7th/vim-vsnip'
+Plug 'tzachar/cmp-tabnine', { 'do': './install.sh' }
+Plug 'rafamadriz/friendly-snippets'
 Plug 'alloyed/lua-lsp'
+
+Plug 'ThePrimeagen/harpoon'
 
 Plug 'mfussenegger/nvim-dap'
 Plug 'rcarriga/nvim-dap-ui'
@@ -76,6 +84,7 @@ let g:tablineclosebutton=1
 colorscheme gruvbox
 
 source ~/.config/nvim/telescope.vim
+source ~/.config/nvim/harpoon.vim
 source ~/.config/nvim/lualine.vim
 source ~/.config/nvim/nerdtree.vim
 "source ~/.config/nvim/coc.vim
@@ -94,6 +103,7 @@ hi LspDiagnosticsVirtualTextHint guifg=green gui=bold,italic,underline
 
 autocmd BufWritePre *.go lua vim.lsp.buf.formatting()
 autocmd BufWritePre *.go lua goimports(1000)
+
 
 vmap <Tab> >gv
 vmap <S-Tab> <gv

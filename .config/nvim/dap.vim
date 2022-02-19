@@ -30,7 +30,10 @@ local function load_module(module_name)
 end
 
 local function setup_go_adapter(dap)
-  vim.fn.sign_define('DapBreakpoint', {text='●', texthl='', linehl='', numhl=''})
+  vim.fn.sign_define('DapBreakpoint', {text='⬤', texthl='', linehl='', numhl=''})
+  vim.fn.sign_define('DapBreakpointRejected', {text='❌', texthl='', linehl='', numhl=''})
+  vim.fn.sign_define('DapBreakpointCodition', {text='⯁', texthl='', linehl='', numhl=''})
+
   dap.defaults.fallback.terminal_win_cmd = '50vsplit new'
   dap.adapters.go = function(callback, config)
     local stdout = vim.loop.new_pipe(false)
@@ -76,6 +79,7 @@ local function setup_go_configuration(dap)
       name = "Debug",
       request = "launch",
       program = "${file}",
+			env = ""
     },
 		{
       type = "go",
@@ -91,6 +95,7 @@ local function setup_go_configuration(dap)
       mode = "local",
       request = "attach",
       processId = require('dap.utils').pick_process,
+			env = ""
     },
     {
       type = "go",
@@ -98,6 +103,7 @@ local function setup_go_configuration(dap)
       request = "launch",
       mode = "test",
       program = "${file}",
+			env = ""
     },
     {
       type = "go",
@@ -105,6 +111,7 @@ local function setup_go_configuration(dap)
       request = "launch",
       mode = "test",
       program = "./${relativeFileDirname}",
+			env = ""
     },
   }
 end
@@ -284,6 +291,7 @@ nnoremap <silent> <F7> :lua require'dap'.step_into()<CR>
 nnoremap <silent> <F8> :lua require'dap'.step_over()<CR>
 nnoremap <silent> <F9> :lua require'dap'.step_out()<CR>
 nnoremap <silent> <leader>b :lua require'dap'.toggle_breakpoint()<CR>
+nnoremap <silent> <leader>cb :lua require'dap.breakpoints'.clear()<CR>
 nnoremap <silent> <leader>B :lua require'dap'.set_breakpoint(vim.fn.input('Breakpoint condition: '))<CR>
 nnoremap <silent> <leader>lp :lua require'dap'.set_breakpoint(nil, nil, vim.fn.input('Log point message: '))<CR>
 nnoremap <silent> <leader>do :lua require'dapui'.toggle()<CR>
@@ -291,6 +299,7 @@ nnoremap <silent> <leader>de :lua require'dapui'.eval()<CR>
 nnoremap <silent> <leader>df :lua require'dapui'.float_element()<CR>
 nnoremap <silent> <leader>dr :lua require'dap'.repl.open()<CR>
 nnoremap <silent> <leader>dl :lua require'dap'.run_last()<CR>
+nmap <leader>dt :lua require('dap').debug_test()<CR>
 
 function! dap#debug_test(...)
   execute "lua require('dap').debug_test()"
@@ -304,4 +313,3 @@ endfunction
 command! -nargs=* Deval call dap#getEvalParams(<f-args>)
 command! -nargs=* DTest call dap#debug_test(<f-args>)
 
-nmap <leader>dt :lua require('dap').debug_test()<CR>
