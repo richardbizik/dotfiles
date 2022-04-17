@@ -23,6 +23,25 @@ local subtests_query = [[
   (#eq? @run "Run")) @parent
 ]]
 
+-- getting default service for nghis projects
+local function get_default_service()
+  local filename = "Makefile"
+	local line = 7
+	local directory = vim.fn.getcwd()
+  local f = io.open(directory.."/"..filename, "rb")
+  if f == nil then return "" end
+	local i = 1
+	for l in io.lines(filename) do 
+		if i == line then
+			if string.len(l) > 18 then 
+				return string.sub(l, 18)
+			else return ""
+			end
+		end
+		i = i+1
+	end
+end
+
 local function load_module(module_name)
   local ok, module = pcall(require, module_name)
   assert(ok, string.format('dap-go dependency error: %s not installed', module_name))
@@ -68,11 +87,17 @@ local function setup_go_adapter(dap)
       function()
         callback({type = "server", host = "127.0.0.1", port = port})
       end,
-      100)
+      500)
   end
 end
 
 local function setup_go_configuration(dap)
+  local service = get_default_service()
+	if service ~= nil then
+		print("Running as: "..service)
+	else
+		service = "other"
+	end
   dap.configurations.go = {
     {
       type = "go",
@@ -87,7 +112,14 @@ local function setup_go_configuration(dap)
       request = "launch",
       mode = "test",
 			program = "${workspaceFolder}/test/rest",
-  		env = "export PROFILE=TEST;export CONFIG_FILE=${workspaceFolder}/conf-test.yaml;"
+  		env = "export PROFILE=TEST;export CONFIG_FILE=${workspaceFolder}/conf/"..service.."/conf-test.yaml;"
+    },
+		{
+      type = "go",
+      name = "Debug main (nghis)",
+      request = "launch",
+			program = "${workspaceFolder}/cmd/"..service.."/main.go",
+  		env = "export PROFILE=DEV;export CONFIG_FILE=${workspaceFolder}/conf/"..service.."/conf-dev.yaml;"
     }, 
     {
       type = "go",
@@ -131,7 +163,7 @@ local function debug_test(testname)
       mode = "test",
       program = "./${relativeFileDirname}",
       args = {"-test.run", testname},
-  		env = "export PROFILE=TEST;export CONFIG_FILE=${workspaceFolder}/conf-test.yaml;"
+      env = "export PROFILE=TEST;export CONFIG_FILE=${workspaceFolder}/conf/"..get_default_service().."/conf-test.yaml;"
   })
 end
 

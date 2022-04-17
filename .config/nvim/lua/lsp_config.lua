@@ -34,6 +34,13 @@ local on_attach = function(client, bufnr)
   elseif client.resolved_capabilities.document_range_formatting then
     buf_set_keymap("n", "ff", "<cmd>lua vim.lsp.buf.range_formatting()<CR>", opts)
   end
+	vim.api.nvim_add_user_command('LR', 
+		function(opts)
+			vim.api.nvim_command('LspRestart')
+			vim.diagnostic.reset()
+		end,
+		{nargs=0}
+	)
 
 end
 
@@ -73,34 +80,26 @@ end
 
 
 function goimports(timeoutms)
-  local context = { source = { organizeImports = true } }
-  vim.validate { context = { context, "t", true } }
+	local gopls_encoding = nil
+  for _, client in ipairs(vim.lsp.get_active_clients()) do 
+		if client.name == "gopls" then
+			gopls_encoding = client.offset_encoding
+			break
+		end
+	end
 
-  local params = vim.lsp.util.make_range_params()
-  params.context = context
-
-  -- See the implementation of the textDocument/codeAction callback
-  -- (lua/vim/lsp/handler.lua) for how to do this properly.
-  local result = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params, timeout_ms)
-  if not result or result[1] == nil then return end
-  local actions = result[1].result
-  if not actions then return end
-  local action = actions[1]
-
-  -- textDocument/codeAction can return either Command[] or CodeAction[]. If it
-  -- is a CodeAction, it can have either an edit, a command or both. Edits
-  -- should be executed first.
-  if action.edit or type(action.command) == "table" then
-    if action.edit ~= nil and action.edit ~= "" then
-			-- print(vim.inspect(action.edit))
-      vim.lsp.util.apply_workspace_edit(action.edit)
-    end
-    if type(action.command) == "table" then
-      vim.lsp.buf.execute_command(action.command)
-    end
-  else
-    vim.lsp.buf.execute_command(action)
-  end
+	local params = vim.lsp.util.make_range_params()
+	params.context = {only = {"source.organizeImports"}}
+	local result = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params, wait_ms)
+	for _, res in pairs(result or {}) do
+		for _, r in pairs(res.result or {}) do
+			if r.edit then
+				vim.lsp.util.apply_workspace_edit(r.edit, gopls_encoding)
+			else
+				vim.lsp.buf.execute_command(r.command)
+			end
+		end
+	end
 end
 
 -- vim.lsp.set_log_level("debug")

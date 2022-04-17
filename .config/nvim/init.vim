@@ -15,6 +15,8 @@ set splitbelow
 set splitright
 " Give more space for displaying messages.
 set cmdheight=2
+" Remove limit for syntax highlighting
+set synmaxcol=0
 
 " Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
 " delays and poor user experience.
@@ -27,6 +29,7 @@ set signcolumn=yes
 set isfname+=@-@ "accept @ as part of filename
 " reselect yanked text while pasting
 xnoremap p pgvy
+set colorcolumn=120
 
 " exit terminal mode
 tnoremap <esc> <C-\><C-N>
@@ -34,11 +37,11 @@ tnoremap <esc> <C-\><C-N>
 set nocompatible   " be improved, required
 filetype off       " required
 
-
 " store the plugins in plugged dir
 call plug#begin('~/.config/nvim/plugged')
 Plug 'morhetz/gruvbox'
 Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-surround'
 Plug 'preservim/nerdtree'
 Plug 'mkitt/tabline.vim'
 
@@ -50,8 +53,8 @@ Plug 'hrsh7th/cmp-path'
 Plug 'hrsh7th/cmp-cmdline'
 Plug 'hrsh7th/nvim-cmp'
 Plug 'hrsh7th/cmp-vsnip'
-Plug 'hrsh7th/vim-vsnip'
 Plug 'tzachar/cmp-tabnine', { 'do': './install.sh' }
+Plug 'hrsh7th/vim-vsnip'
 Plug 'rafamadriz/friendly-snippets'
 Plug 'alloyed/lua-lsp'
 
@@ -79,9 +82,19 @@ call plug#end()
 
 let g:NERDTreeChDirMode = 2
 let g:tablineclosebutton=1
-
 " select the color scheme
 colorscheme gruvbox
+" go hightlights
+let g:go_highlight_build_constraints = 1
+let g:go_highlight_extra_types = 1
+let g:go_highlight_fields = 1
+let g:go_highlight_functions = 1
+let g:go_highlight_methods = 1
+let g:go_highlight_operators = 1
+let g:go_highlight_structs = 1
+let g:go_highlight_types = 1
+let g:go_auto_sameids = 1
+let g:go_auto_type_info = 1
 
 source ~/.config/nvim/telescope.vim
 source ~/.config/nvim/harpoon.vim
