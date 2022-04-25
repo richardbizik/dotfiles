@@ -66,7 +66,7 @@ local function setup_go_adapter(dap)
       args = {"dap", "-l", addr},
       detached = true
     }
-	handle, pid_or_err = vim.loop.spawn("/usr/bin/bash", {stdio = {nil, stdout}, args={"-c", config.env.." dlv dap -l "..addr}, detached = true}, function(code)
+	handle, pid_or_err = vim.loop.spawn("/usr/bin/bash", {stdio = {nil, stdout}, args={"-c", "dlv dap -l "..addr}, detached = true}, function(code)
       stdout:close()
       handle:close()
       if code ~= 0 then
@@ -104,7 +104,7 @@ local function setup_go_configuration(dap)
       name = "Debug",
       request = "launch",
       program = "${file}",
-			env = ""
+			env = {}
     },
 		{
       type = "go",
@@ -112,14 +112,20 @@ local function setup_go_configuration(dap)
       request = "launch",
       mode = "test",
 			program = "${workspaceFolder}/test/rest",
-  		env = "export PROFILE=TEST;export CONFIG_FILE=${workspaceFolder}/conf/"..service.."/conf-test.yaml;"
+  		env = {
+				PROFILE="TEST",
+				CONFIG_FILE="${workspaceFolder}/conf/"..service.."/conf-test.yaml"
+			}
     },
 		{
       type = "go",
       name = "Debug main (nghis)",
       request = "launch",
 			program = "${workspaceFolder}/cmd/"..service.."/main.go",
-  		env = "export PROFILE=DEV;export CONFIG_FILE=${workspaceFolder}/conf/"..service.."/conf-dev.yaml;"
+  		env = {
+				PROFILE="TEST",
+				CONFIG_FILE="${workspaceFolder}/conf/"..service.."/conf-dev.yaml"
+			}
     }, 
     {
       type = "go",
@@ -127,15 +133,22 @@ local function setup_go_configuration(dap)
       mode = "local",
       request = "attach",
       processId = require('dap.utils').pick_process,
-			env = ""
+			env = {}
     },
+		{
+      type = "go",
+      name = "Debug main",
+      request = "launch",
+			program = "${workspaceFolder}/main.go",
+			env = {}
+    }, 
     {
       type = "go",
       name = "Debug test",
       request = "launch",
       mode = "test",
       program = "${file}",
-			env = ""
+			env = {}
     },
     {
       type = "go",
@@ -143,7 +156,7 @@ local function setup_go_configuration(dap)
       request = "launch",
       mode = "test",
       program = "./${relativeFileDirname}",
-			env = ""
+			env = {}
     },
   }
 end
@@ -163,7 +176,10 @@ local function debug_test(testname)
       mode = "test",
       program = "./${relativeFileDirname}",
       args = {"-test.run", testname},
-      env = "export PROFILE=TEST;export CONFIG_FILE=${workspaceFolder}/conf/"..get_default_service().."/conf-test.yaml;"
+  		env = {
+				PROFILE="TEST",
+				CONFIG_FILE="${workspaceFolder}/conf/"..get_default_service().."/conf-test.yaml"
+			}
   })
 end
 

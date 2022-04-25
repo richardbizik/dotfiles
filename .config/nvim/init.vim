@@ -28,6 +28,7 @@ set clipboard+=unnamedplus
 set signcolumn=yes
 set isfname+=@-@ "accept @ as part of filename
 " reselect yanked text while pasting
+set laststatus=3 "use global statusline
 xnoremap p pgvy
 set colorcolumn=120
 

@@ -34,7 +34,7 @@ local on_attach = function(client, bufnr)
   elseif client.resolved_capabilities.document_range_formatting then
     buf_set_keymap("n", "ff", "<cmd>lua vim.lsp.buf.range_formatting()<CR>", opts)
   end
-	vim.api.nvim_add_user_command('LR', 
+	vim.api.nvim_create_user_command('LR', 
 		function(opts)
 			vim.api.nvim_command('LspRestart')
 			vim.diagnostic.reset()
