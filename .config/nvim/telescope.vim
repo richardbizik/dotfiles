@@ -5,14 +5,21 @@ nnoremap <leader>fg <cmd>Telescope live_grep<cr>
 nnoremap <leader>fb <cmd>Telescope buffers<cr>
 nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 nnoremap <leader>ff <cmd>lua require('telescope.builtin').find_files()<cr>
+nnoremap <leader>fr <cmd>lua require('telescope.builtin').lsp_references()<cr>
+nnoremap <leader>fd <cmd>lua require('telescope.builtin').diagnostics()<cr>
 nnoremap <leader>fg <cmd>lua require('telescope.builtin').live_grep()<cr>
 nnoremap <leader>fb <cmd>lua require('telescope.builtin').buffers()<cr>
 nnoremap <leader>fh <cmd>lua require('telescope.builtin').help_tags()<cr>
 nnoremap <leader>fs <cmd>lua require('telescope.builtin').grep_string()<cr>
-
+nnoremap gd <cmd>lua require('telescope.builtin').lsp_definitions()<cr>
+nnoremap gi <cmd>lua require('telescope.builtin').lsp_implementations()<cr>
+nnoremap <leader>D <cmd>lua require('telescope.builtin').lsp_type_definitions()<cr>
+nnoremap gr <cmd>lua require('telescope.builtin').lsp_references()<cr>
+nnoremap <leader>ss <cmd>lua require('telescope.builtin').lsp_document_symbols()<cr>
 lua << EOF
 local previewers = require("telescope.previewers")
 local Job = require("plenary.job")
+local actions = require('telescope.actions')
 local new_maker = function(filepath, bufnr, opts)
   filepath = vim.fn.expand(filepath)
   Job:new({
@@ -34,7 +41,14 @@ end
 require('telescope').load_extension('fzf')
 require("telescope").setup {
 	defaults = {
-		buffer_preview_marker = new_marker,
+		buffer_preview_marker = new_marker, 
+		mappings = {
+				i = {
+						["<C-k>"] = actions.move_selection_previous,
+						["<C-j>"] = actions.move_selection_next,
+						["<esc>"] = actions.close
+				}
+		}
 	},
   pickers = {
     buffers = {
@@ -45,7 +59,14 @@ require("telescope").setup {
           ["d"] = "delete_buffer",
         }
       }
-    }
-  }
+    },
+  },
+	extensions = {
+		["ui-select"] = {
+				require("telescope.themes").get_dropdown {
+				}
+		}
+	}
 }
+require("telescope").load_extension("ui-select")
 EOF

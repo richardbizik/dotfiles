@@ -31,6 +31,7 @@ set isfname+=@-@ "accept @ as part of filename
 set laststatus=3 "use global statusline
 xnoremap p pgvy
 set colorcolumn=120
+let mapleader=" "
 
 " exit terminal mode
 tnoremap <esc> <C-\><C-N>
@@ -54,19 +55,21 @@ Plug 'hrsh7th/cmp-path'
 Plug 'hrsh7th/cmp-cmdline'
 Plug 'hrsh7th/nvim-cmp'
 Plug 'hrsh7th/cmp-vsnip'
-Plug 'tzachar/cmp-tabnine', { 'do': './install.sh' }
 Plug 'hrsh7th/vim-vsnip'
 Plug 'rafamadriz/friendly-snippets'
 Plug 'alloyed/lua-lsp'
+Plug 'mfussenegger/nvim-jdtls'
 
 Plug 'ThePrimeagen/harpoon'
 
 Plug 'mfussenegger/nvim-dap'
 Plug 'rcarriga/nvim-dap-ui'
+Plug 'theHamsta/nvim-dap-virtual-text'
 
 Plug 'nvim-telescope/telescope.nvim'
 Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
-Plug 'nvim-treesitter/nvim-treesitter'
+Plug 'nvim-telescope/telescope-ui-select.nvim'
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'nvim-lua/plenary.nvim'
 
 "Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -119,6 +122,8 @@ autocmd BufWritePre *.go lua vim.lsp.buf.formatting()
 autocmd BufWritePre *.go lua goimports(1000)
 
 
+vmap <silent> <leader>ts :'<,'>!gojson<CR>
+nnoremap <silent> <leader>b :lua require'dap'.toggle_breakpoint()<CR>
 vmap <Tab> >gv
 vmap <S-Tab> <gv
 
@@ -126,3 +131,8 @@ imap <C-H> <C-W>
 
 " markdown preview
 let g:mkdp_auto_close = 0
+" xml folding
+augroup XML
+    autocmd!
+    autocmd FileType xml setlocal foldmethod=indent foldlevelstart=999 foldminlines=0
+augroup END

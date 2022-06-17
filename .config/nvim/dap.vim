@@ -123,7 +123,7 @@ local function setup_go_configuration(dap)
       request = "launch",
 			program = "${workspaceFolder}/cmd/"..service.."/main.go",
   		env = {
-				PROFILE="TEST",
+				PROFILE="DEV",
 				CONFIG_FILE="${workspaceFolder}/conf/"..service.."/conf-dev.yaml"
 			}
     }, 
@@ -291,6 +291,19 @@ end
 
 setup()
 
+-- open dapui automatically
+-- local dap, dapui = require("dap"), require("dapui")
+-- dap.listeners.after.event_initialized["dapui_config"] = function()
+--   dapui.open()
+-- end
+-- dap.listeners.before.event_terminated["dapui_config"] = function()
+--   dapui.close()
+-- end
+-- dap.listeners.before.event_exited["dapui_config"] = function()
+--   dapui.close()
+-- end
+
+require("nvim-dap-virtual-text").setup()
 require("dapui").setup({
   icons = { expanded = "▾", collapsed = "▸" },
   mappings = {

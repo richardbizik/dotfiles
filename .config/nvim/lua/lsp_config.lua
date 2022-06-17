@@ -3,30 +3,35 @@ local nvim_lsp = require('lspconfig')
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities.textDocument.completion.completionItem.snippetSupport = true
 
+local opts = { noremap=true, silent=true }
+vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, opts)
+vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
+vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
+vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, opts)
+
 local on_attach = function(client, bufnr)
   local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
   local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
 
   buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
 
+	local bufopts = { noremap=true, silent=true, buffer=bufnr }
   -- Mappings.
-  local opts = { noremap=true, silent=true }
-  buf_set_keymap('n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
-  buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
-  buf_set_keymap('n', 'ga', '<Cmd>lua vim.lsp.buf.code_action()<CR>', opts)
-  buf_set_keymap('n', 'K', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
-  buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
-  buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
-  buf_set_keymap('n', '<space>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
-  buf_set_keymap('n', '<space>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
-  buf_set_keymap('n', '<space>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
-  buf_set_keymap('n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
-  buf_set_keymap('n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
-  buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
-  buf_set_keymap('n', '<space>e', '<cmd>lua vim.diagnostic.show_line_diagnostics()<CR>', opts)
-  buf_set_keymap('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts) 
-	buf_set_keymap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
-  buf_set_keymap('n', '<space>q', '<cmd>lua vim.diagnostic.set_loclist()<CR>', opts)
+  vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
+  vim.keymap.set('n', 'ca', vim.lsp.buf.code_action, bufopts)
+  vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
+  vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, bufopts)
+  vim.keymap.set('n', '<leader>wa', vim.lsp.buf.add_workspace_folder, bufopts)
+  vim.keymap.set('n', '<leader>wr', vim.lsp.buf.remove_workspace_folder, bufopts)
+  vim.keymap.set('n', '<leader>wl', function()
+    print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+  end, bufopts)
+	vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, bufopts)
+	-- replaced by telescope
+  -- buf_set_keymap('n', '<leader>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
+  -- buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
+  -- buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
+  -- buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
 
   -- Set some keybinds conditional on server capabilities
   if client.resolved_capabilities.document_formatting then
@@ -34,8 +39,8 @@ local on_attach = function(client, bufnr)
   elseif client.resolved_capabilities.document_range_formatting then
     buf_set_keymap("n", "ff", "<cmd>lua vim.lsp.buf.range_formatting()<CR>", opts)
   end
-	vim.api.nvim_create_user_command('LR', 
-		function(opts)
+	vim.api.nvim_create_user_command('LR',
+		function()
 			vim.api.nvim_command('LspRestart')
 			vim.diagnostic.reset()
 		end,
@@ -63,11 +68,93 @@ nvim_lsp.gopls.setup{
 		},
 	}
 
--- nvim_lsp.pyright.setup{}
+nvim_lsp.sumneko_lua.setup{
+	settings = {
+    Lua = {
+      runtime = {
+        -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
+        version = 'LuaJIT',
+      },
+      diagnostics = {
+        -- Get the language server to recognize the `vim` global
+        globals = {'vim'},
+      },
+      workspace = {
+        -- Make the server aware of Neovim runtime files
+        library = vim.api.nvim_get_runtime_file("", true),
+      },
+      -- Do not send telemetry data containing a randomized but unique identifier
+      telemetry = {
+        enable = false,
+      },
+    },
+  },
+}
+
+nvim_lsp.jdtls.setup {
+  cmd = {
+    'java', -- or '/path/to/java11_or_newer/bin/java'
+            -- depends on if `java` is in your $PATH env variable and if it points to the right version.
+    '-Declipse.application=org.eclipse.jdt.ls.core.id1',
+    '-Dosgi.bundles.defaultStartLevel=4',
+    '-Declipse.product=org.eclipse.jdt.ls.core.product',
+    '-Dlog.protocol=true',
+    '-Dlog.level=ALL',
+    '-Xms1g',
+    '--add-modules=ALL-SYSTEM',
+    '--add-opens', 'java.base/java.util=ALL-UNNAMED',
+    '--add-opens', 'java.base/java.lang=ALL-UNNAMED',
+
+		'-javaagent',
+		'/home/riso/.local/share/jdtls/lombok.jar',
+		'-Xbootclasspath/a',
+		'/home/riso/.local/share/jdtls/lombok.jar',
+    '-jar', '/mnt/fast/projects/jdtls/plugins/org.eclipse.equinox.launcher_1.6.400.v20210924-0641.jar',
+    '-configuration', '/mnt/fast/projects/jdtls/config_linux',
+    -- See `data directory configuration` section in the README
+    '-data', '${workspaceFolder}'
+  },
+
+  -- One dedicated LSP server & client will be started per unique root_dir
+  -- root_dir = require('jdtls.setup').find_root({'.git', 'mvnw', 'gradlew'}),
+
+  -- See https://github.com/eclipse/eclipse.jdt.ls/wiki/Running-the-JAVA-LS-server-from-the-command-line#initialize-request
+  settings = {
+    java = {
+    }
+  },
+
+  -- Language server `initializationOptions`
+  -- You need to extend the `bundles` with paths to jar files
+  -- if you want to use additional eclipse.jdt.ls plugins.
+  --
+  -- See https://github.com/mfussenegger/nvim-jdtls#java-debug-installation
+  --
+  -- If you don't plan on using the debugger or other eclipse.jdt.ls plugins you can remove this
+  init_options = {
+    bundles = {}
+  },
+}
+nvim_lsp.bashls.setup{}
+nvim_lsp.cmake.setup{}
+nvim_lsp.golangci_lint_ls.setup{}
+nvim_lsp.rust_analyzer.setup{}
 
 
 -- local servers = { 'gopls', 'pyright' }
-local servers = { 'gopls', 'yamlls', 'pyright', 'eslint', 'html' }
+local servers = {
+	'gopls',
+	'golangci_lint_ls',
+	'yamlls',
+	'sumneko_lua',
+	'pyright',
+	'eslint',
+	'html',
+	'jdtls',
+	'cmake',
+	'bashls',
+	'rust_analyzer'
+}
 for _, lsp in ipairs(servers) do
   nvim_lsp[lsp].setup {
     on_attach = on_attach,
