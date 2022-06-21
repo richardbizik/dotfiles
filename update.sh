@@ -11,6 +11,7 @@ cp ~/.config/nvim/lualine.vim ./.config/nvim/
 cp ~/.config/nvim/nerdtree.vim ./.config/nvim/
 cp ~/.config/nvim/telescope.vim ./.config/nvim/
 cp ~/.config/nvim/vsnip.vim ./.config/nvim/
+cp ~/.config/nvim/ftplugin/java.lua ./.config/nvim/ftplugin
 
 # snippets
 cp ~/.vsnip/*.json ./.vsnip/

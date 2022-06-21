@@ -1,3 +1,4 @@
+local m = {}
 local nvim_lsp = require('lspconfig')
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -9,7 +10,7 @@ vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, opts)
 
-local on_attach = function(client, bufnr)
+m.on_attach = function(client, bufnr)
   local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
   local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
 
@@ -91,54 +92,12 @@ nvim_lsp.sumneko_lua.setup{
   },
 }
 
-nvim_lsp.jdtls.setup {
-  cmd = {
-    'java', -- or '/path/to/java11_or_newer/bin/java'
-            -- depends on if `java` is in your $PATH env variable and if it points to the right version.
-    '-Declipse.application=org.eclipse.jdt.ls.core.id1',
-    '-Dosgi.bundles.defaultStartLevel=4',
-    '-Declipse.product=org.eclipse.jdt.ls.core.product',
-    '-Dlog.protocol=true',
-    '-Dlog.level=ALL',
-    '-Xms1g',
-    '--add-modules=ALL-SYSTEM',
-    '--add-opens', 'java.base/java.util=ALL-UNNAMED',
-    '--add-opens', 'java.base/java.lang=ALL-UNNAMED',
 
-		'-javaagent',
-		'/home/riso/.local/share/jdtls/lombok.jar',
-		'-Xbootclasspath/a',
-		'/home/riso/.local/share/jdtls/lombok.jar',
-    '-jar', '/mnt/fast/projects/jdtls/plugins/org.eclipse.equinox.launcher_1.6.400.v20210924-0641.jar',
-    '-configuration', '/mnt/fast/projects/jdtls/config_linux',
-    -- See `data directory configuration` section in the README
-    '-data', '${workspaceFolder}'
-  },
-
-  -- One dedicated LSP server & client will be started per unique root_dir
-  -- root_dir = require('jdtls.setup').find_root({'.git', 'mvnw', 'gradlew'}),
-
-  -- See https://github.com/eclipse/eclipse.jdt.ls/wiki/Running-the-JAVA-LS-server-from-the-command-line#initialize-request
-  settings = {
-    java = {
-    }
-  },
-
-  -- Language server `initializationOptions`
-  -- You need to extend the `bundles` with paths to jar files
-  -- if you want to use additional eclipse.jdt.ls plugins.
-  --
-  -- See https://github.com/mfussenegger/nvim-jdtls#java-debug-installation
-  --
-  -- If you don't plan on using the debugger or other eclipse.jdt.ls plugins you can remove this
-  init_options = {
-    bundles = {}
-  },
-}
 nvim_lsp.bashls.setup{}
 nvim_lsp.cmake.setup{}
 nvim_lsp.golangci_lint_ls.setup{}
 nvim_lsp.rust_analyzer.setup{}
+nvim_lsp.eslint.setup{}
 
 
 -- local servers = { 'gopls', 'pyright' }
@@ -150,19 +109,18 @@ local servers = {
 	'pyright',
 	'eslint',
 	'html',
-	'jdtls',
 	'cmake',
 	'bashls',
 	'rust_analyzer'
 }
 for _, lsp in ipairs(servers) do
-  nvim_lsp[lsp].setup {
-    on_attach = on_attach,
-    flags = {
-      debounce_text_changes = 150,
-    },
+	nvim_lsp[lsp].setup {
+		on_attach = on_attach,
+		flags = {
+			debounce_text_changes = 150,
+		},
 		capabilities = capabilities,
-  }
+	}
 end
 
 
@@ -189,6 +147,7 @@ function goimports(timeoutms)
 	end
 end
 
+
 -- vim.lsp.set_log_level("debug")
 do
   local method = "textDocument/publishDiagnostics"
@@ -209,3 +168,4 @@ do
     vim.fn.setqflist(qflist)
   end
 end
+return m

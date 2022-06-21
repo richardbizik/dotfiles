@@ -48,11 +48,11 @@ local function load_module(module_name)
   return module
 end
 
-local function setup_go_adapter(dap)
-  vim.fn.sign_define('DapBreakpoint', {text='⬤', texthl='', linehl='', numhl=''})
-  vim.fn.sign_define('DapBreakpointRejected', {text='❌', texthl='', linehl='', numhl=''})
-  vim.fn.sign_define('DapBreakpointCodition', {text='⯁', texthl='', linehl='', numhl=''})
+vim.fn.sign_define('DapBreakpoint', {text='⬤', texthl='', linehl='', numhl=''})
+vim.fn.sign_define('DapBreakpointRejected', {text='❌', texthl='', linehl='', numhl=''})
+vim.fn.sign_define('DapBreakpointCodition', {text='⯁', texthl='', linehl='', numhl=''})
 
+local function setup_go_adapter(dap)
   dap.defaults.fallback.terminal_win_cmd = '50vsplit new'
   dap.adapters.go = function(callback, config)
     local stdout = vim.loop.new_pipe(false)
