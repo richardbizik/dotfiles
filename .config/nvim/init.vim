@@ -20,7 +20,7 @@ set synmaxcol=0
 
 " Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
 " delays and poor user experience.
-set updatetime=300
+set updatetime=50
 " Don't pass messages to |ins-completion-menu|.
 set shortmess+=c
 set termguicolors
@@ -123,7 +123,6 @@ autocmd BufWritePre *.go lua goimports(1000)
 
 
 vmap <silent> <leader>ts :'<,'>!gojson<CR>
-nnoremap <silent> <leader>b :lua require'dap'.toggle_breakpoint()<CR>
 vmap <Tab> >gv
 vmap <S-Tab> <gv
 

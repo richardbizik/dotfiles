@@ -1,3 +1,8 @@
+local set = vim.opt -- set options
+set.tabstop = 4
+set.softtabstop = 4
+set.shiftwidth = 4
+set.expandtab = true
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities.textDocument.completion.completionItem.snippetSupport = true
 
@@ -11,6 +16,7 @@ local bundles = {
     java_debug_paths,
 }
 vim.list_extend(bundles, vim.split(java_test_paths, "\n"))
+vim.list_extend(bundles, vim.split("", "\n"))
 
 local jdtls_path = home_path .. "/dev/lsp/jdtls"
 local jdtls_jar_path = vim.fn.glob(jdtls_path .. "/plugins/org.eclipse.equinox.launcher_*.jar")
@@ -22,13 +28,17 @@ local jdtls_data_path = home_path.. "/java_workspace/" .. project_name
 
 local function on_attach(client, bufnr)
     require("lsp_config").on_attach(client, bufnr)
-		require("jdtls").setup_dap({
+    require("jdtls").setup_dap({
         hotcodereplace = "auto",
         config_overrides = {
             console = "internalConsole",
+            vmArgs = "-Dspring.profiles.active=dev",
         },
     })
+    require('jdtls.dap').setup_dap_main_class_configs()
     require("jdtls.setup").add_commands()
+  local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
+  buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
 
     -- Define commands.
     vim.cmd(
@@ -56,7 +66,6 @@ local cmd = {
     "--add-opens",
     "java.base/java.lang=ALL-UNNAMED",
     "-javaagent:" .. lombok_path,
-    "-Xbootclasspath/a:" .. lombok_path,
     "-jar",
     jdtls_jar_path,
     "-configuration",
@@ -66,16 +75,17 @@ local cmd = {
   }
 local config = {
     cmd = cmd,
-    root_dir = require("jdtls.setup").find_root({ ".git", "mvnw", "gradlew" }),
+    -- root_dir = require("jdtls.setup").find_root({ ".git", "mvnw", "gradlew" }),
+    root_dir = require("jdtls.setup").find_root({ ".git"}),
     settings = {
         java = {},
     },
     init_options = {
-			bundles = bundles,
+      bundles = bundles,
     },
-		flags = {
-			debounce_text_changes = 150,
-		},
+    flags = {
+      debounce_text_changes = 150,
+    },
     capabilities = capabilities,
     on_attach = on_attach,
 }
@@ -83,3 +93,36 @@ require("jdtls").start_or_attach(config)
 
 vim.cmd([[nnoremap <leader>dt <Cmd>lua require'jdtls'.test_nearest_method()<CR>]])
 vim.cmd([[nnoremap <leader>dc <Cmd>lua require'jdtls'.test_class()<CR>]])
+
+-- add generated sources to resources org.eclipse.core.resources.prefs
+--
+-- encoding//src/generated/java=UTF-8
+-- encoding//src/generated/resources=UTF-8
+--
+-- add generated sources to module .classpath
+--
+--
+-- <classpathentry kind="src" output="target/classes" path="src/generated/java">
+--     <attributes>
+--         <attribute name="optional" value="true"/>
+--         <attribute name="maven.pomderived" value="true"/>
+--     </attributes>
+-- </classpathentry>
+-- <classpathentry excluding="" kind="src" output="target/classes" path="src/generated/resources">
+--     <attributes>
+--         <attribute name="maven.pomderived" value="true"/>
+--     </attributes>
+-- </classpathentry>
+-- <classpathentry kind="src" output="target/test-classes" path="src/test/generated/java">
+--     <attributes>
+--         <attribute name="optional" value="true"/>
+--         <attribute name="maven.pomderived" value="true"/>
+--         <attribute name="test" value="true"/>
+--     </attributes>
+-- </classpathentry>
+-- <classpathentry excluding="" kind="src" output="target/test-classes" path="src/test/generated/resources">
+--     <attributes>
+--         <attribute name="maven.pomderived" value="true"/>
+--         <attribute name="test" value="true"/>
+--     </attributes>
+-- </classpathentry>

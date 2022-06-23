@@ -26,20 +26,20 @@ local subtests_query = [[
 -- getting default service for nghis projects
 local function get_default_service()
   local filename = "Makefile"
-	local line = 7
-	local directory = vim.fn.getcwd()
+  local line = 7
+  local directory = vim.fn.getcwd()
   local f = io.open(directory.."/"..filename, "rb")
   if f == nil then return "" end
-	local i = 1
-	for l in io.lines(filename) do 
-		if i == line then
-			if string.len(l) > 18 then 
-				return string.sub(l, 18)
-			else return ""
-			end
-		end
-		i = i+1
-	end
+  local i = 1
+  for l in io.lines(filename) do 
+    if i == line then
+      if string.len(l) > 18 then 
+        return string.sub(l, 18)
+      else return ""
+      end
+    end
+    i = i+1
+  end
 end
 
 local function load_module(module_name)
@@ -66,7 +66,7 @@ local function setup_go_adapter(dap)
       args = {"dap", "-l", addr},
       detached = true
     }
-	handle, pid_or_err = vim.loop.spawn("/usr/bin/bash", {stdio = {nil, stdout}, args={"-c", "dlv dap -l "..addr}, detached = true}, function(code)
+  handle, pid_or_err = vim.loop.spawn("/usr/bin/bash", {stdio = {nil, stdout}, args={"-c", "dlv dap -l "..addr}, detached = true}, function(code)
       stdout:close()
       handle:close()
       if code ~= 0 then
@@ -93,39 +93,39 @@ end
 
 local function setup_go_configuration(dap)
   local service = get_default_service()
-	if service ~= nil then
-		print("Running as: "..service)
-	else
-		service = "other"
-	end
+  if service ~= nil then
+    print("Running as: "..service)
+  else
+    service = "other"
+  end
   dap.configurations.go = {
     {
       type = "go",
       name = "Debug",
       request = "launch",
       program = "${file}",
-			env = {}
+      env = {}
     },
-		{
+    {
       type = "go",
       name = "Debug test (nghis)",
       request = "launch",
       mode = "test",
-			program = "${workspaceFolder}/test/rest",
-  		env = {
-				PROFILE="TEST",
-				CONFIG_FILE="${workspaceFolder}/conf/"..service.."/conf-test.yaml"
-			}
+      program = "${workspaceFolder}/test/rest",
+      env = {
+        PROFILE="TEST",
+        CONFIG_FILE="${workspaceFolder}/conf/"..service.."/conf-test.yaml"
+      }
     },
-		{
+    {
       type = "go",
       name = "Debug main (nghis)",
       request = "launch",
-			program = "${workspaceFolder}/cmd/"..service.."/main.go",
-  		env = {
-				PROFILE="DEV",
-				CONFIG_FILE="${workspaceFolder}/conf/"..service.."/conf-dev.yaml"
-			}
+      program = "${workspaceFolder}/cmd/"..service.."/main.go",
+      env = {
+        PROFILE="DEV",
+        CONFIG_FILE="${workspaceFolder}/conf/"..service.."/conf-dev.yaml"
+      }
     }, 
     {
       type = "go",
@@ -133,14 +133,14 @@ local function setup_go_configuration(dap)
       mode = "local",
       request = "attach",
       processId = require('dap.utils').pick_process,
-			env = {}
+      env = {}
     },
-		{
+    {
       type = "go",
       name = "Debug main",
       request = "launch",
-			program = "${workspaceFolder}/main.go",
-			env = {}
+      program = "${workspaceFolder}/main.go",
+      env = {}
     }, 
     {
       type = "go",
@@ -148,7 +148,7 @@ local function setup_go_configuration(dap)
       request = "launch",
       mode = "test",
       program = "${file}",
-			env = {}
+      env = {}
     },
     {
       type = "go",
@@ -156,7 +156,7 @@ local function setup_go_configuration(dap)
       request = "launch",
       mode = "test",
       program = "./${relativeFileDirname}",
-			env = {}
+      env = {}
     },
   }
 end
@@ -176,10 +176,10 @@ local function debug_test(testname)
       mode = "test",
       program = "./${relativeFileDirname}",
       args = {"-test.run", testname},
-  		env = {
-				PROFILE="TEST",
-				CONFIG_FILE="${workspaceFolder}/conf/"..get_default_service().."/conf-test.yaml"
-			}
+      env = {
+        PROFILE="TEST",
+        CONFIG_FILE="${workspaceFolder}/conf/"..get_default_service().."/conf-test.yaml"
+      }
   })
 end
 
@@ -367,9 +367,9 @@ function! dap#debug_test(...)
 endfunction
 
 function! dap#getEvalParams(...)
-	let flags = (a:0 >0)? join(a:000) : ""
-	let flags = "'" . flags . "'"
-	execute "lua require('dapui').eval(" . flags . ")"
+  let flags = (a:0 >0)? join(a:000) : ""
+  let flags = "'" . flags . "'"
+  execute "lua require('dapui').eval(" . flags . ")"
 endfunction
 command! -nargs=* Deval call dap#getEvalParams(<f-args>)
 command! -nargs=* DTest call dap#debug_test(<f-args>)

@@ -1,26 +1,27 @@
 set completeopt=menu,menuone,noselect
+let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
 
 lua <<EOF
   -- Setup nvim-cmp.
   local has_words_before = function()
     local line, col = unpack(vim.api.nvim_win_get_cursor(0))
     return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
-	end
+  end
 
-	local feedkey = function(key, mode)
+  local feedkey = function(key, mode)
     vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(key, true, true, true), mode, true)
-	end 
+  end 
 
-	local cmp = require'cmp'
+  local cmp = require'cmp'
   local lspkind = require('lspkind')
-	
-	local source_mapping = {
-		buffer = "[Buffer]",
-		nvim_lsp = "[LSP]",
-		nvim_lua = "[Lua]",
-		vsnip = "[Vsnip]",
-		path = "[Path]",
-	}
+  
+  local source_mapping = {
+    buffer = "[Buffer]",
+    nvim_lsp = "[LSP]",
+    nvim_lua = "[Lua]",
+    vsnip = "[Vsnip]",
+    path = "[Path]",
+  }
 
   cmp.setup({
     snippet = {
@@ -28,6 +29,12 @@ lua <<EOF
       expand = function(args)
         vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
      end,
+    },
+    completion = {
+      autocomplete = false, -- disable auto-completion.
+    },
+    performance = {
+      trigger_debounce_time = 500,
     },
     mapping = {
       ['<C-b>'] = cmp.mapping(cmp.mapping.scroll_docs(-4), { 'i', 'c' }),
@@ -39,26 +46,26 @@ lua <<EOF
         c = cmp.mapping.close(),
       }),
       ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
-			["<C-j>"] = cmp.mapping(function(fallback)
-						if cmp.visible() then
-							cmp.select_next_item()
-						elseif vim.fn["vsnip#available"](1) == 1 then
-							feedkey("<Plug>(vsnip-expand-or-jump)", "")
-						-- elseif has_words_before() then
-						-- 	cmp.complete()
-						else
-							fallback() -- The fallback function sends a already mapped key. In this case, it's probably `<Tab>`.
-						end
-					end, { "i", "s" }),
-			["<C-k>"] = cmp.mapping(function()
-				if cmp.visible() then
-					cmp.select_prev_item()
-				elseif vim.fn["vsnip#jumpable"](-1) == 1 then
-					feedkey("<Plug>(vsnip-jump-prev)", "")
-				end
-					end, { "i", "s" }),
-		},
-		formatting = {
+      ["<C-j>"] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+              cmp.select_next_item()
+            elseif vim.fn["vsnip#available"](1) == 1 then
+              feedkey("<Plug>(vsnip-expand-or-jump)", "")
+             -- elseif has_words_before() then
+             --   cmp.complete()
+            else
+              fallback() -- The fallback function sends a already mapped key. In this case, it's probably `<Tab>`.
+            end
+          end, { "i", "s" }),
+      ["<C-k>"] = cmp.mapping(function()
+        if cmp.visible() then
+          cmp.select_prev_item()
+        elseif vim.fn["vsnip#jumpable"](-1) == 1 then
+          feedkey("<Plug>(vsnip-jump-prev)", "")
+        end
+          end, { "i", "s" }),
+    },
+    formatting = {
         format = function(entry, vim_item)
             vim_item.kind = lspkind.presets.default[vim_item.kind]
             local menu = source_mapping[entry.source.name]
@@ -97,40 +104,47 @@ lua <<EOF
 
 
   local servers = { 'gopls', 'yamlls', 'pyright' }
-	for _, lsp in ipairs(servers) do
-		require('lspconfig')[lsp].setup {
-			capabilities = capabilities
-		}
-	end
-	local cmp = require('cmp')
-	cmp.setup {
-		completion = {
-			autocomplete = true, -- disable auto-completion.
-		},
-	}
+  for _, lsp in ipairs(servers) do
+    require('lspconfig')[lsp].setup {
+      capabilities = capabilities
+    }
+  end
 
-	_G.vimrc = _G.vimrc or {}
-	_G.vimrc.cmp = _G.vimrc.cmp or {}
-	_G.vimrc.cmp.lsp = function()
-		cmp.complete({
-			config = {
-				sources = {
-					{ name = 'nvim_lsp' }
-				}
-			}
-		})
-	end
-	_G.vimrc.cmp.snippet = function()
-		cmp.complete({
-			config = {
-				sources = {
-					{ name = 'vsnip' }
-				}
-			}
-		})
-	end
-	vim.cmd([[
-		inoremap <C-x><C-o> <Cmd>lua vimrc.cmp.lsp()<CR>
-		inoremap <C-x><C-s> <Cmd>lua vimrc.cmp.snippet()<CR>
-	]])
+  _G.vimrc = _G.vimrc or {}
+  _G.vimrc.cmp = _G.vimrc.cmp or {}
+  _G.vimrc.cmp.lsp = function()
+    cmp.complete({
+      config = {
+        sources = {
+          { name = 'nvim_lsp' }
+        }
+      }
+    })
+  end
+  _G.vimrc.cmp.snippet = function()
+    cmp.complete({
+      config = {
+        sources = {
+          { name = 'vsnip' }
+        }
+      }
+    })
+  end
+  vim.cmd([[
+    inoremap <C-x><C-o> <Cmd>lua vimrc.cmp.lsp()<CR>
+    inoremap <C-x><C-s> <Cmd>lua vimrc.cmp.snippet()<CR>
+  ]])
 EOF
+
+autocmd TextChangedI * call s:on_text_changed()
+let s:timer_id = 0
+function! s:on_text_changed() abort
+  function! s:invoke() abort closure
+lua << EOF
+    local cmp = require('cmp')
+    cmp.complete({ reason = cmp.ContextReason.Auto })
+EOF
+  endfunction
+  call timer_stop(s:timer_id)
+  let s:timer_id = timer_start(300, { -> s:invoke() })
+endfunction

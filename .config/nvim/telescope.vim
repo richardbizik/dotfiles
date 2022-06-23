@@ -40,16 +40,16 @@ local new_maker = function(filepath, bufnr, opts)
 end
 require('telescope').load_extension('fzf')
 require("telescope").setup {
-	defaults = {
-		buffer_preview_marker = new_marker, 
-		mappings = {
-				i = {
-						["<C-k>"] = actions.move_selection_previous,
-						["<C-j>"] = actions.move_selection_next,
-						["<esc>"] = actions.close
-				}
-		}
-	},
+  defaults = {
+    buffer_preview_marker = new_marker, 
+    mappings = {
+        i = {
+            ["<C-k>"] = actions.move_selection_previous,
+            ["<C-j>"] = actions.move_selection_next,
+            ["<esc>"] = actions.close
+        }
+    }
+  },
   pickers = {
     buffers = {
       show_all_buffers = true,
@@ -61,12 +61,12 @@ require("telescope").setup {
       }
     },
   },
-	extensions = {
-		["ui-select"] = {
-				require("telescope.themes").get_dropdown {
-				}
-		}
-	}
+  extensions = {
+    ["ui-select"] = {
+        require("telescope.themes").get_dropdown {
+        }
+    }
+  }
 }
 require("telescope").load_extension("ui-select")
 EOF
