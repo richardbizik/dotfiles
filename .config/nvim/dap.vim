@@ -303,7 +303,6 @@ setup()
 --   dapui.close()
 -- end
 
-require("nvim-dap-virtual-text").setup()
 require("dapui").setup({
   icons = { expanded = "▾", collapsed = "▸" },
   mappings = {
@@ -344,6 +343,11 @@ require("dapui").setup({
   },
   windows = { indent = 1 },
 })
+require("nvim-dap-virtual-text").setup{
+    only_first_definition = true,
+    all_references = false,
+    show_stop_reason = true,
+}
 EOF
 
 nnoremap <silent> <F5> :lua require'dap'.continue()<CR>

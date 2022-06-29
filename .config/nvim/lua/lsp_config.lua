@@ -15,7 +15,7 @@ m.on_attach = function(client, bufnr)
 
   buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
 
-	local bufopts = { noremap=true, silent=true, buffer=bufnr }
+  local bufopts = { noremap=true, silent=true, buffer=bufnr }
   -- Mappings.
   vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
   vim.keymap.set('n', 'ca', vim.lsp.buf.code_action, bufopts)
@@ -26,8 +26,8 @@ m.on_attach = function(client, bufnr)
   vim.keymap.set('n', '<leader>wl', function()
     print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
   end, bufopts)
-	vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, bufopts)
-	-- replaced by telescope
+  vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, bufopts)
+  -- replaced by telescope
   -- buf_set_keymap('n', '<leader>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
   -- buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
   -- buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
@@ -39,37 +39,37 @@ m.on_attach = function(client, bufnr)
   elseif client.resolved_capabilities.document_range_formatting then
     buf_set_keymap("n", "ff", "<cmd>lua vim.lsp.buf.range_formatting()<CR>", opts)
   end
-	vim.api.nvim_create_user_command('LR',
-		function()
-			vim.api.nvim_command('LspRestart')
-			vim.diagnostic.reset()
-		end,
-		{nargs=0}
-	)
+  vim.api.nvim_create_user_command('LR',
+    function()
+      vim.api.nvim_command('LspRestart')
+      vim.diagnostic.reset()
+    end,
+    {nargs=0}
+  )
 
 end
 
 nvim_lsp.gopls.setup{
-	cmd = {'gopls', 'serve'},
-	capabilities = capabilities,
-		settings = {
-			gopls = {
-				experimentalPostfixCompletions = true,
-				analyses = {
-					unusedparams = true,
-					unreachable = true,
-					shadow = true,
-					fieldalignment = true,
-					nilness = true,
-					unusedwrite = true,
-			 },
-			 staticcheck = true,
-			},
-		},
-	}
+  cmd = {'gopls', 'serve'},
+  capabilities = capabilities,
+    settings = {
+      gopls = {
+        experimentalPostfixCompletions = true,
+        analyses = {
+          unusedparams = true,
+          unreachable = true,
+          shadow = true,
+          fieldalignment = true,
+          nilness = true,
+          unusedwrite = true,
+       },
+       staticcheck = true,
+      },
+    },
+  }
 
 nvim_lsp.sumneko_lua.setup{
-	settings = {
+  settings = {
     Lua = {
       runtime = {
         -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
@@ -91,6 +91,17 @@ nvim_lsp.sumneko_lua.setup{
   },
 }
 
+nvim_lsp.ccls.setup {
+  init_options = {
+    compilationDatabaseDirectory = "build";
+    index = {
+      threads = 0;
+    };
+    clang = {
+      excludeArgs = { "-frounding-math"} ;
+    };
+  }
+}
 
 nvim_lsp.bashls.setup{}
 nvim_lsp.cmake.setup{}
@@ -101,49 +112,50 @@ nvim_lsp.eslint.setup{}
 
 -- local servers = { 'gopls', 'pyright' }
 local servers = {
-	'gopls',
-	'golangci_lint_ls',
-	'yamlls',
-	'sumneko_lua',
-	'pyright',
-	'eslint',
-	'html',
-	'cmake',
-	'bashls',
-	'rust_analyzer'
+  'ccls',
+  'gopls',
+  'golangci_lint_ls',
+  'yamlls',
+  'sumneko_lua',
+  'pyright',
+  'eslint',
+  'html',
+  'cmake',
+  'bashls',
+  'rust_analyzer'
 }
 for _, lsp in ipairs(servers) do
-	nvim_lsp[lsp].setup {
-		on_attach = on_attach,
-		flags = {
-			debounce_text_changes = 150,
-		},
-		capabilities = capabilities,
-	}
+  nvim_lsp[lsp].setup {
+    on_attach = m.on_attach,
+    flags = {
+      debounce_text_changes = 150,
+    },
+    capabilities = capabilities,
+  }
 end
 
 
 function goimports(timeoutms)
-	local gopls_encoding = nil
+  local gopls_encoding = nil
   for _, client in ipairs(vim.lsp.get_active_clients()) do 
-		if client.name == "gopls" then
-			gopls_encoding = client.offset_encoding
-			break
-		end
-	end
+    if client.name == "gopls" then
+      gopls_encoding = client.offset_encoding
+      break
+    end
+  end
 
-	local params = vim.lsp.util.make_range_params()
-	params.context = {only = {"source.organizeImports"}}
-	local result = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params, wait_ms)
-	for _, res in pairs(result or {}) do
-		for _, r in pairs(res.result or {}) do
-			if r.edit then
-				vim.lsp.util.apply_workspace_edit(r.edit, gopls_encoding)
-			else
-				vim.lsp.buf.execute_command(r.command)
-			end
-		end
-	end
+  local params = vim.lsp.util.make_range_params()
+  params.context = {only = {"source.organizeImports"}}
+  local result = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params, wait_ms)
+  for _, res in pairs(result or {}) do
+    for _, r in pairs(res.result or {}) do
+      if r.edit then
+        vim.lsp.util.apply_workspace_edit(r.edit, gopls_encoding)
+      else
+        vim.lsp.buf.execute_command(r.command)
+      end
+    end
+  end
 end
 
 

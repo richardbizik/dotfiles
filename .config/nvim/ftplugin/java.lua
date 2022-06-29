@@ -78,7 +78,24 @@ local config = {
     -- root_dir = require("jdtls.setup").find_root({ ".git", "mvnw", "gradlew" }),
     root_dir = require("jdtls.setup").find_root({ ".git"}),
     settings = {
-        java = {},
+      java = {
+        configuration = {
+          runtimes = {
+            {
+              name = "JavaSE-1.8",
+              path = "/usr/lib/jvm/java-8-openjdk/",
+            },
+            {
+              name = "JavaSE-11",
+              path = "/usr/lib/jvm/java-11-openjdk/",
+            },
+            {
+              name = "JavaSE-17",
+              path = "/usr/lib/jvm/java-17-openjdk/",
+            },
+          },
+        },
+      },
     },
     init_options = {
       bundles = bundles,
