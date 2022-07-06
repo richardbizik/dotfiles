@@ -20,4 +20,4 @@ cp ~/.vsnip/*.json ./.vsnip/
 # kitty
 cp ~/.config/kitty/kitty.conf ./.config/kitty/ 
 # tmux
-cp ~/.tmux.conf ./ 
+cp -R ~/.config/tmux/. ./.config/tmux

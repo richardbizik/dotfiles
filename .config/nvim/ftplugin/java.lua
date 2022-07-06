@@ -3,7 +3,7 @@ set.tabstop = 4
 set.softtabstop = 4
 set.shiftwidth = 4
 set.expandtab = true
-local capabilities = vim.lsp.protocol.make_client_capabilities()
+local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
 capabilities.textDocument.completion.completionItem.snippetSupport = true
 
 local home_path = require("os").getenv("HOME")
@@ -24,7 +24,7 @@ local jdtls_config_path = jdtls_path .. "/config_linux"
 local lombok_path = home_path .. "/dev/lsp/lombok/lombok.jar"
 
 local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ":p:h:t")
-local jdtls_data_path = home_path.. "/java_workspace/" .. project_name
+local jdtls_data_path = home_path .. "/java_workspace/" .. project_name
 
 local function on_attach(client, bufnr)
     require("lsp_config").on_attach(client, bufnr)
@@ -32,13 +32,17 @@ local function on_attach(client, bufnr)
         hotcodereplace = "auto",
         config_overrides = {
             console = "internalConsole",
-            vmArgs = "-Dspring.profiles.active=dev",
+            vmArgs = function()
+                local profile = vim.fn.input('Spring profile: ')
+                return "-Dspring.profiles.active=" .. profile
+            end,
         },
     })
     require('jdtls.dap').setup_dap_main_class_configs()
     require("jdtls.setup").add_commands()
-  local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
-  buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
+    local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
+
+    buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
 
     -- Define commands.
     vim.cmd(
@@ -52,8 +56,9 @@ local function on_attach(client, bufnr)
     vim.cmd([[command! -buffer JdtBytecode lua require('jdtls').javap()]])
     vim.cmd([[command! -buffer JdtJshell lua require('jdtls').jshell()]])
 end
+
 local cmd = {
-"java",
+    "java",
     "-Declipse.application=org.eclipse.jdt.ls.core.id1",
     "-Dosgi.bundles.defaultStartLevel=4",
     "-Declipse.product=org.eclipse.jdt.ls.core.product",
@@ -72,36 +77,36 @@ local cmd = {
     jdtls_config_path,
     "-data",
     jdtls_data_path,
-  }
+}
 local config = {
     cmd = cmd,
     -- root_dir = require("jdtls.setup").find_root({ ".git", "mvnw", "gradlew" }),
-    root_dir = require("jdtls.setup").find_root({ ".git"}),
+    root_dir = require("jdtls.setup").find_root({ ".git" }),
     settings = {
-      java = {
-        configuration = {
-          runtimes = {
-            {
-              name = "JavaSE-1.8",
-              path = "/usr/lib/jvm/java-8-openjdk/",
+        java = {
+            configuration = {
+                runtimes = {
+                    {
+                        name = "JavaSE-1.8",
+                        path = "/usr/lib/jvm/java-8-openjdk/",
+                    },
+                    {
+                        name = "JavaSE-11",
+                        path = "/usr/lib/jvm/java-11-openjdk/",
+                    },
+                    {
+                        name = "JavaSE-17",
+                        path = "/usr/lib/jvm/java-17-openjdk/",
+                    },
+                },
             },
-            {
-              name = "JavaSE-11",
-              path = "/usr/lib/jvm/java-11-openjdk/",
-            },
-            {
-              name = "JavaSE-17",
-              path = "/usr/lib/jvm/java-17-openjdk/",
-            },
-          },
         },
-      },
     },
     init_options = {
-      bundles = bundles,
+        bundles = bundles,
     },
     flags = {
-      debounce_text_changes = 150,
+        debounce_text_changes = 150,
     },
     capabilities = capabilities,
     on_attach = on_attach,

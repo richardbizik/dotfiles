@@ -1,6 +1,6 @@
 syntax on
 set encoding=utf-8
-set number relativenumber
+set number
 set ruler
 set spelllang=en_us
 set autoindent
@@ -10,6 +10,7 @@ set splitright
 set cursorline
 set hlsearch
 set hidden
+set spelllang=en,cjk
 
 set splitbelow
 set splitright
@@ -28,8 +29,8 @@ set clipboard+=unnamedplus
 set signcolumn=yes
 set isfname+=@-@ "accept @ as part of filename
 " reselect yanked text while pasting
-set laststatus=3 "use global statusline
 xnoremap p pgvy
+set laststatus=3 "use global statusline
 set colorcolumn=120
 let mapleader=" "
 
@@ -54,8 +55,6 @@ Plug 'hrsh7th/cmp-buffer'
 Plug 'hrsh7th/cmp-path'
 Plug 'hrsh7th/cmp-cmdline'
 Plug 'hrsh7th/nvim-cmp'
-Plug 'hrsh7th/cmp-vsnip'
-Plug 'hrsh7th/vim-vsnip'
 Plug 'rafamadriz/friendly-snippets'
 Plug 'alloyed/lua-lsp'
 Plug 'mfussenegger/nvim-jdtls'
@@ -82,6 +81,10 @@ Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
 
 Plug 'tpope/vim-dadbod'
 Plug 'kristijanhusak/vim-dadbod-ui'
+
+Plug 'L3MON4D3/LuaSnip'
+Plug 'saadparwaiz1/cmp_luasnip'
+Plug 'rafamadriz/friendly-snippets'
 call plug#end()
 
 let g:NERDTreeChDirMode = 2
