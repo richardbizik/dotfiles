@@ -91,6 +91,13 @@ local function setup_go_adapter(dap)
   end
 end
 
+local function get_config_file(file)
+  last_slash = string.find(file, "/[^/]*$")
+  pre = string.sub(file, 1, last_slash)
+  print('string', pre)
+  return 
+end
+
 local function setup_go_configuration(dap)
   local service = get_default_service()
   if service ~= nil then
@@ -125,6 +132,22 @@ local function setup_go_configuration(dap)
       env = {
         PROFILE="DEV",
         CONFIG_FILE="${workspaceFolder}/conf/"..service.."/conf-dev.yaml"
+      }
+    }, 
+    {
+      type = "go",
+      name = "Debug custom main (nghis)",
+      request = "launch",
+      program = function()
+                local exec = vim.fn.input('Executable: ')
+                return "${workspaceFolder}/cmd/"..exec.."/main.go"
+            end,
+      env = {
+        PROFILE="DEV",
+        CONFIG_FILE=function()
+                local exec = vim.fn.input('Config: ')
+                return "${workspaceFolder}/conf/"..exec.."/conf-dev.yaml"
+            end,
       }
     }, 
     {
@@ -313,25 +336,25 @@ require("dapui").setup({
     edit = "e",
     repl = "r",
   },
-  sidebar = {
-    -- You can change the order of elements in the sidebar
-    elements = {
-      -- Provide as ID strings or tables with "id" and "size" keys
-      {
-        id = "scopes",
-        size = 0.25, -- Can be float or integer > 1
+  layouts = {
+    {
+      elements = {
+        'watches',
+        'scopes',
+        'breakpoints',
+        'stacks',
       },
-      { id = "breakpoints", size = 0.25 },
-      { id = "stacks", size = 0.25 },
-      { id = "watches", size = 00.25 },
+      size = 40,
+      position = 'left',
     },
-    size = 40,
-    position = "left", -- Can be "left", "right", "top", "bottom"
-  },
-  tray = {
-    elements = { "repl" },
-    size = 10,
-    position = "bottom", -- Can be "left", "right", "top", "bottom"
+    {
+      elements = {
+        'repl',
+        -- 'console',
+      },
+      size = 10,
+      position = 'bottom',
+    },
   },
   floating = {
     max_height = nil, -- These can be integers or a float between 0 and 1.

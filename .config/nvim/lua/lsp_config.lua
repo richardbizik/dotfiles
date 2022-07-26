@@ -78,7 +78,7 @@ cmp.setup({
     sources = cmp.config.sources({
         { name = 'nvim_lsp' },
         --{ name = 'vsnip' }, -- For vsnip users.
-        -- { name = 'buffer' },
+        { name = 'buffer' },
         { name = 'luasnip' }, -- For luasnip users.
         -- { name = 'ultisnips' }, -- For ultisnips users.
         -- { name = 'snippy' }, -- For snippy users.
@@ -100,10 +100,6 @@ cmp.setup.cmdline(':', {
         { name = 'cmdline' }
     })
 })
-
-
-
-
 
 
 -- Setup lspconfig.

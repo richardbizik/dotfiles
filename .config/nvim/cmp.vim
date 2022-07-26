@@ -11,5 +11,5 @@ lua << EOF
 EOF
   endfunction
   call timer_stop(s:timer_id)
-  let s:timer_id = timer_start(300, { -> s:invoke() })
+  let s:timer_id = timer_start(1000, { -> s:invoke() })
 endfunction

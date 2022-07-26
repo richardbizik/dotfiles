@@ -109,7 +109,7 @@ source ~/.config/nvim/lualine.vim
 source ~/.config/nvim/nerdtree.vim
 "source ~/.config/nvim/coc.vim
 source ~/.config/nvim/cmp.vim
-source ~/.config/nvim/vsnip.vim
+" source ~/.config/nvim/vsnip.vim
 source ~/.config/nvim/dap.vim
 source ~/.config/nvim/secret.vim
 
