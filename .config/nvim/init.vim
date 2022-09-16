@@ -2,7 +2,6 @@ syntax on
 set encoding=utf-8
 set number
 set ruler
-set spelllang=en_us
 set autoindent
 set mouse=a
 set ts=2 sts=2 sw=2
@@ -11,6 +10,7 @@ set cursorline
 set hlsearch
 set hidden
 set spelllang=en,cjk
+set spell
 
 set splitbelow
 set splitright
@@ -33,6 +33,11 @@ xnoremap p pgvy
 set laststatus=3 "use global statusline
 set colorcolumn=120
 let mapleader=" "
+set undolevels=1000
+set undofile
+set undodir=~/.nvim/undodir
+set relativenumber
+set scrolloff=8
 
 " exit terminal mode
 tnoremap <esc> <C-\><C-N>
@@ -46,7 +51,9 @@ Plug 'morhetz/gruvbox'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
 Plug 'preservim/nerdtree'
+Plug 'ryanoasis/vim-devicons'
 Plug 'mkitt/tabline.vim'
+Plug 'mbbill/undotree'
 
 Plug 'neovim/nvim-lspconfig'
 Plug 'onsails/lspkind-nvim'
@@ -69,6 +76,7 @@ Plug 'nvim-telescope/telescope.nvim'
 Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
 Plug 'nvim-telescope/telescope-ui-select.nvim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+Plug 'nvim-treesitter/nvim-treesitter-context'
 Plug 'nvim-lua/plenary.nvim'
 
 "Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -107,9 +115,8 @@ source ~/.config/nvim/telescope.vim
 source ~/.config/nvim/harpoon.vim
 source ~/.config/nvim/lualine.vim
 source ~/.config/nvim/nerdtree.vim
-"source ~/.config/nvim/coc.vim
+source ~/.config/nvim/treesitter.vim
 source ~/.config/nvim/cmp.vim
-" source ~/.config/nvim/vsnip.vim
 source ~/.config/nvim/dap.vim
 source ~/.config/nvim/secret.vim
 
@@ -131,6 +138,12 @@ vmap <S-Tab> <gv
 
 imap <C-H> <C-W>
 
+" " move selected lines
+" nnoremap K :m .-2<CR>==
+" nnoremap J :m .+1<CR>==
+" vnoremap K :m '<-2<CR>gv=gv
+" vnoremap J :m '>+1<CR>gv=gv
+
 " markdown preview
 let g:mkdp_auto_close = 0
 " xml folding
@@ -138,3 +151,25 @@ augroup XML
     autocmd!
     autocmd FileType xml setlocal foldmethod=indent foldlevelstart=999 foldminlines=0
 augroup END
+
+
+
+lua << EOF
+local random = math.random
+local function uuid()
+    local template ='xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
+    return string.gsub(template, '[xy]', function (c)
+        local v = (c == 'x') and random(0, 0xf) or random(8, 0xb)
+        return string.format('%x', v)
+    end)
+end
+vim.api.nvim_create_user_command('UUID',
+    function()
+        local pos = vim.api.nvim_win_get_cursor(0)[2]
+        local line = vim.api.nvim_get_current_line()
+        local nline = line:sub(0, pos) .. uuid() .. line:sub(pos + 1)
+        vim.api.nvim_set_current_line(nline)
+    end,
+    { nargs = 0 }
+)
+EOF

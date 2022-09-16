@@ -1,0 +1,46 @@
+* {
+    background-color:           #32302f;
+    border-color:               #3b4252;
+    text-color:                 #fbf1c7;
+    height:                     2%;
+    font:                       "Ubuntu Bold 8";
+    prompt-font:                "Ubuntu Bold 8";
+    prompt-background:          #242424;
+    prompt-foreground:          #888888;
+    prompt-padding:             5px;
+    selected-normal-background: #383838;
+    selected-normal-foreground: #b48ead;
+}
+#window {
+    anchor: northwest;
+    location: northwest;
+    width: 70%;
+    padding: 0px;
+    children: [ horibox ];
+}
+#horibox {
+    orientation: horizontal;
+    children: [ prompt, entry, listview ];
+}
+#prompt {
+    padding:          @prompt-padding;
+    background-color: @prompt-background;
+    text-color:       @prompt-foreground;
+    font:             @prompt-font;
+}
+#listview {
+    layout: horizontal;
+    lines: 100;
+}
+#entry {
+    padding: 5px;
+    expand: false;
+    width: 5em;
+}
+#element {
+    padding: 5px 3px;
+}
+#element selected {
+    background-color: @selected-normal-background;
+    text-color:       @selected-normal-foreground;
+}

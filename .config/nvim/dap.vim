@@ -368,7 +368,7 @@ require("dapui").setup({
 })
 require("nvim-dap-virtual-text").setup{
     only_first_definition = true,
-    all_references = false,
+    all_references = true,
     show_stop_reason = true,
 }
 EOF

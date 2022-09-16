@@ -16,8 +16,12 @@ cp ~/.config/nvim/ftplugin/*.lua ./.config/nvim/ftplugin
 # snippets
 cp ~/.vsnip/*.json ./.vsnip/
 
-
 # kitty
 cp ~/.config/kitty/kitty.conf ./.config/kitty/ 
+
 # tmux
-cp -R ~/.config/tmux/. ./.config/tmux
+cp ~/.config/tmux/tmux.conf ./.config/tmux/tmux.conf
+
+# i3 & polybar
+cp -R ~/.config/i3/. ./.config/i3
+cp -R ~/.config/polybar/. ./.config/polybar

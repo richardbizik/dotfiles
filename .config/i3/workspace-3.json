@@ -1,0 +1,23 @@
+// vim:ts=4:sw=4:et
+{
+    "border": "pixel",
+    "current_border_width": 1,
+    "floating": "auto_off",
+    "geometry": {
+       "height": 513,
+       "width": 1893,
+       "x": 21,
+       "y": 1626
+    },
+    "marks": [],
+    "name": "misc",
+    "percent": 1,
+    "swallows": [
+       {
+       "class": "^Chromium$",
+       "title": "^misc$"
+       }
+    ],
+    "type": "con"
+}
+

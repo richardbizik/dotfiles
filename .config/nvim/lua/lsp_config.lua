@@ -135,10 +135,8 @@ m.on_attach = function(client, bufnr)
     -- buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
 
     -- Set some keybinds conditional on server capabilities
-    if client.resolved_capabilities.document_formatting then
-        buf_set_keymap("n", "ff", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
-    elseif client.resolved_capabilities.document_range_formatting then
-        buf_set_keymap("n", "ff", "<cmd>lua vim.lsp.buf.range_formatting()<CR>", opts)
+    if client.server_capabilities.documentFormattingProvider then
+        buf_set_keymap("n", "ff", "<cmd>lua vim.lsp.buf.format{async=true}<CR>", opts)
     end
     vim.api.nvim_create_user_command('LR',
         function()
@@ -299,4 +297,5 @@ require("luasnip.loaders.from_vscode").lazy_load({
     include = nil, -- Load all languages
     exclude = {},
 })
+
 return m
