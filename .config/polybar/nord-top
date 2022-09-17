@@ -50,7 +50,6 @@ icon-margin = 2
 label-separator = |
 label-separator-foreground = ${colors.buffer}
 
-
 [module/pipewire]
 type = custom/ipc
 
@@ -285,7 +284,7 @@ interval = 1
 format-prefix = " "
 format = <label>
 exec = python3 $HOME/.config/polybar/scripts/spotify_status.py -f '{artist}: {song}'
-format-underline = #fabd2f
+; format-underline = #fabd2f
 ;control players (optional)
 click-left = playerctl --player=spotify play-pause 
 click-right = playerctl --player=spotify next 

@@ -42,7 +42,7 @@ top-right = keyboard backlight alsa battery network-short updates-pacman
 
 # Bottom modules
 # info-hackspeed
-bottom-left = powermenu weather 
+bottom-left = powermenu weather uptime meetings
 bottom-center = title
 bottom-right = spotify network-detail memory cpu temperature
 systray-top = none

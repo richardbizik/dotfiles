@@ -1,4 +1,17 @@
 ; vim:ft=dosini
+[module/uptime]
+type = custom/script
+exec = ~/.config/polybar/scripts/uptime.sh
+label-font = 6
+interval = 600
+
+[module/meetings]
+type = custom/script
+exec = $HOME/.config/polybar/scripts/meetings.py
+interval = 30
+label-font = 6
+
+
 [module/powermenu]
 type = custom/menu
 
@@ -139,5 +152,5 @@ type = custom/script
 exec = ~/.config/polybar/scripts/openweathermap-fullfeatured.sh
 interval = 600
 
-label-font = 4
+label-font = 6
 	

@@ -451,11 +451,11 @@ set $base0F #fcc09e
 
     # Window color settings
     # class                 border  backgr. text    indicator
-    client.focused          #b8bb26 #b8bb26 #ffffff #b8bb26
+    client.focused          #4e5011 #b8bb26 #ffffff #4e5011
     client.unfocused        #32302f #282828 #888888 #32302f
     client.focused_inactive #282828 #282828 #888888 #282828
     client.placeholder      #282828 # #888888 #82828
-    client.urgent           #900000 #900000 #ffffff #900000
+    client.urgent           #590000 #900000 #ffffff #590000
 
     client.background       #242424
 
@@ -473,6 +473,9 @@ set $base0F #fcc09e
 #####################################################################################################################
 #####################################################################################################################
 
+############# Window rules ##################
+for_window [class="Chromium"] border none
+
 set $main_monitor DP-2
 set $top_monitor DP-1
 
@@ -487,8 +490,12 @@ workspace 7 output $main_monitor
 workspace 8 output $main_monitor
 workspace 9 output $main_monitor
 
-############ START APPS #############
+exec --no-startup-id i3-msg 'workspace 2; append_layout ~/.config/i3/workspace-2.json'
+exec --no-startup-id i3-msg 'workspace 3; append_layout ~/.config/i3/workspace-3.json'
+exec --no-startup-id i3-msg 'workspace 4; append_layout ~/.config/i3/workspace-4.json'
+exec --no-startup-id i3-msg 'workspace 5; append_layout ~/.config/i3/workspace-5.json'
 
+############ START APPS #############
 
 exec --no-startup-id i3-msg 'workspace 1;exec kitty'
 

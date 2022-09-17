@@ -1,0 +1,45 @@
+// vim:ts=4:sw=4:et
+{
+    "border": "pixel",
+    "current_border_width": 1,
+    "floating": "auto_off",
+    "geometry": {
+       "height": 879,
+       "width": 1501,
+       "x": 511,
+       "y": 1083
+    },
+    "marks": [],
+    "name": "Steam",
+    "percent": 0.8,
+    "swallows": [
+       {
+       "class": "^Steam$",
+       "title": "^Steam$"
+       }
+    ],
+    "type": "con"
+}
+
+{
+    "border": "pixel",
+    "current_border_width": 1,
+    "floating": "auto_off",
+    "geometry": {
+       "height": 1312,
+       "width": 485,
+       "x": 2694,
+       "y": 2224
+    },
+    "marks": [],
+    "name": "Friends List",
+    "percent": 0.2,
+    "swallows": [
+       {
+       "class": "^Steam$",
+       "title": "^Friends\\ List$"
+       }
+    ],
+    "type": "con"
+}
+

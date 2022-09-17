@@ -1,5 +1,7 @@
 #!/bin/sh
 
+weather_font_index=4
+normal_font_index=6
 get_icon() {
     case $1 in
         01d) icon="";;
@@ -85,12 +87,12 @@ if [ -n "$current" ] && [ -n "$forecast" ]; then
     now=$(date +%s)
 
     if [ "$sun_rise" -gt "$now" ]; then
-        daytime=" $(get_duration "$((sun_rise-now))")"
+        daytime="%{T$weather_font_index} %{T$normal_font_index}$(get_duration "$((sun_rise-now))")"
     elif [ "$sun_set" -gt "$now" ]; then
-        daytime=" $(get_duration "$((sun_set-now))")"
+        daytime="%{T$weather_font_index} %{T$normal_font_index}$(get_duration "$((sun_set-now))")"
     else
-        daytime=" $(get_duration "$((sun_rise-now))")"
+        daytime="%{T$weather_font_index} %{T$normal_font_index}$(get_duration "$((sun_rise-now))")"
     fi
 
-    echo "$(get_icon "$current_icon") $current_temp$SYMBOL  $trend  $(get_icon "$forecast_icon") $forecast_temp$SYMBOL   $daytime"
+    echo "%{T$weather_font_index}$(get_icon "$current_icon") %{T$normal_font_index}$current_temp%{T$weather_font_index}%{T$normal_font_index}$SYMBOL  %{T$weather_font_index}$trend  $(get_icon "$forecast_icon") %{T$normal_font_index}$forecast_temp$SYMBOL   $daytime"
 fi
