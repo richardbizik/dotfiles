@@ -22,7 +22,7 @@ with open(cookies_location, mode='rb') as f:
 utc = pytz.UTC
 local_tz = datetime.now(timezone.utc).astimezone().tzinfo
 # date = "2022-09-23"
-# now = datetime.fromisoformat("2022-09-23T08:30:00+02:00")
+# now = datetime.fromisoformat("2022-09-23T08:40:00+02:00")
 now = utc.localize(datetime.now())
 date = datetime.strftime(now.astimezone(local_tz), "%Y-%m-%d")
 
@@ -35,7 +35,7 @@ try:
         body = urllib.request.urlopen(req).read().decode()
     except urllib.error.HTTPError as e:
         if e.code == 401:
-            print("  bad token")
+            print("")
         exit(1)
     _body = json.loads(body)
 
@@ -65,18 +65,19 @@ try:
 
     # show current meeting, next meeting or when the meeting ends depending on time
     result = "Meeting "
+    color = ""
     if closest_start < now: 
         print("end at: "+datetime.strftime(closest_end.astimezone(local_tz), "%H:%M"))
     if closest_start > now: 
         if closest_start.timetuple().tm_yday == now.timetuple().tm_yday:
             if closest_start < now + timedelta(minutes=10):
-                result += "%{F#fe8019}%{B#fbf1c7}"
+                color = "%{F#fe8019}%{B#fbf1c7}"
 
             result += "start at: "+datetime.strftime(closest_start.astimezone(local_tz), "%H:%M")
         else:
             result = "No more meetings today"
             # result += "start at: "+datetime.strftime(closest_start.astimezone(local_tz), "%Y-%m-%d %H:%M")
 
-    print("   "+result)
+    print(color+"    "+result+" ")
 except:
     print("")

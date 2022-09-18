@@ -102,8 +102,9 @@ interval = 1.0
 ; See "http://en.cppreference.com/w/cpp/io/manip/put_time" for details on how to format the date string
 ; NOTE: if you want to use syntax tags here you need to use %%{...}
 date-alt = %r
-date = %Y-%m-%d %H:%M:%S %a
+; date = %Y-%m-%d %H:%M:%S %a
 
+date = %{A1: ~/.config/polybar/scripts/popup-calendar.sh --popup &:}%A, %Y-%m-%d %H:%M:%S%{A}
 format = <label>
 label =  %date%
 label-margin = 1
