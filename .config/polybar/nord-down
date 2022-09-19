@@ -38,6 +38,10 @@ menu-0-2 = 
 menu-0-2-foreground = ${colors.warning}
 menu-0-2-padding = 2
 menu-0-2-exec = systemctl suspend
+menu-0-3 = 
+menu-0-3-foreground = ${colors.warning}
+menu-0-3-padding = 2
+menu-0-3-exec = ~/.config/i3/scripts/lock.sh
 
 [module/cpu]
 type = internal/cpu
