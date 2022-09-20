@@ -68,6 +68,13 @@ scroll-down = exec polybar-msg action "#pipewire.hook.2"
 click-left = exec polybar-msg action "#pipewire.hook.3"
 click-right = exec pavucontrol &
 
+[module/sinkswitch]
+type = custom/script
+exec = ~/.config/polybar/scripts/sink-switch.sh
+tail = true
+click-left = ~/.config/polybar/scripts/sink-switch.sh --toggle
+label-font = 5
+
 [module/workspace-name]
 type = internal/i3
 strip-wsnumbers = true

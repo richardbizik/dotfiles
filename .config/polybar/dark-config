@@ -47,6 +47,7 @@ font-1 = FontAwesome6FreeSolid:pixelsize=12;1
 font-2 = Meslo%20LG%20S%20Regular%20Nerd%20Font%20Complete%20Mono:size=12
 font-3 = FontAwesome6Brands:pixelsize=8;1
 font-4 = FiraCodeRegular:pixelsize=12
+font-5 = Meslo%20LG%20S%20Regular%20Nerd%20Font%20Complete%20Mono:style:Bold:size=12
 
 modules-left = ${config.top-left}
 modules-center = ${config.top-center}

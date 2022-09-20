@@ -38,7 +38,7 @@ wm-restack = i3
 # Top modules
 top-left = rofi-run i3
 top-center = date
-top-right = keyboard backlight alsa battery network-short updates-pacman
+top-right = sinkswitch keyboard backlight alsa battery network-short updates-pacman
 
 # Bottom modules
 # info-hackspeed
