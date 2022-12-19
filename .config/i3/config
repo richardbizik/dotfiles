@@ -399,7 +399,7 @@ mode "$mode_gaps_outer" {
 #####################################################################################################################
 
 #if you want transparency on non-focused windows, ...
-exec_always --no-startup-id picom --config ~/.config/i3/picom.conf
+# exec_always --no-startup-id picom --config ~/.config/i3/picom.conf
 # exec_always --no-startup-id nitrogen --restore
 # exec_always --no-startup-id ~/.config/i3/scripts/mouse.sh
 exec_always feh --bg-fill $HOME/Pictures/walls/10.png
@@ -479,28 +479,29 @@ for_window [class="Chromium"] border none
 set $main_monitor DP-2
 set $top_monitor DP-1
 
-workspace 2 output $top_monitor
-workspace 4 output $top_monitor
-
-workspace 1 output $main_monitor
-workspace 3 output $main_monitor
-workspace 5 output $main_monitor
-workspace 6 output $main_monitor
-workspace 7 output $main_monitor
-workspace 8 output $main_monitor
-workspace 9 output $main_monitor
 
 exec --no-startup-id i3-msg 'workspace 2; append_layout ~/.config/i3/workspace-2.json'
 exec --no-startup-id i3-msg 'workspace 3; append_layout ~/.config/i3/workspace-3.json'
 exec --no-startup-id i3-msg 'workspace 4; append_layout ~/.config/i3/workspace-4.json'
 exec --no-startup-id i3-msg 'workspace 5; append_layout ~/.config/i3/workspace-5.json'
 
+workspace 2 output $top_monitor
+workspace 3 output $top_monitor
+
+workspace 1 output $main_monitor
+workspace 4 output $main_monitor
+workspace 5 output $main_monitor
+workspace 6 output $main_monitor
+workspace 7 output $main_monitor
+workspace 8 output $main_monitor
+workspace 9 output $main_monitor
+
 ############ START APPS #############
 
 exec --no-startup-id i3-msg 'workspace 1;exec kitty'
 
 exec --no-startup-id i3-msg 'workspace 2;exec spotify'
-exec --no-startup-id i3-msg 'workspace 2;exec discord'
+exec --no-startup-id i3-msg 'workspace 2;exec com.discordapp.Discord'
 exec --no-startup-id i3-msg 'workspace 2;exec signal-desktop'
 
 exec --no-startup-id i3-msg 'workspace 4;exec chromium'

@@ -1,5 +1,5 @@
 #!/bin/bash
-speakers="alsa_output.pci-0000_0e_00.4.analog-stereo"
+speakers="alsa_output.pci-0000_0d_00.4.analog-stereo"
 headphones="alsa_output.usb-SteelSeries_Arctis_Pro_Wireless-00.stereo-game"
 arg="${1:-}"
 
@@ -35,6 +35,10 @@ case "$arg" in
 				notify-send "Switched to speakers!"
 				echo ""
 				;;
+			*)
+			  activate_sink "$speakers"
+				notify-send "Switched to speakers!"
+				echo ""
 		esac
     ;;
   *)

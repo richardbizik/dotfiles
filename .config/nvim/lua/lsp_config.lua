@@ -1,7 +1,8 @@
 local m = {}
 local nvim_lsp = require('lspconfig')
+local util = require 'lspconfig/util'
 
-local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
 capabilities.textDocument.completion.completionItem.snippetSupport = true
 
 
@@ -207,17 +208,29 @@ nvim_lsp.cmake.setup {}
 nvim_lsp.golangci_lint_ls.setup {}
 nvim_lsp.rust_analyzer.setup {}
 nvim_lsp.eslint.setup {}
+nvim_lsp.tsserver.setup{}
+nvim_lsp.svelte.setup {}
+nvim_lsp.volar.setup {
+    root_dir = util.root_pattern("package.json", ".git/");
+    init_options = {
+        typescript = {
+            tsdk = '/usr/lib/node_modules/typescript/lib'
+        }
+    }
+}
 
 
--- local servers = { 'gopls', 'pyright' }
 local servers = {
     'ccls',
     'gopls',
     'golangci_lint_ls',
     'yamlls',
+    'volar',
     'sumneko_lua',
     'pyright',
+    'tsserver',
     'eslint',
+    'svelte',
     'html',
     'cmake',
     'bashls',

@@ -20,6 +20,7 @@ lua << EOF
 local previewers = require("telescope.previewers")
 local Job = require("plenary.job")
 local actions = require('telescope.actions')
+local action_state = require("telescope.actions.state")
 local new_maker = function(filepath, bufnr, opts)
   filepath = vim.fn.expand(filepath)
   Job:new({
@@ -38,6 +39,16 @@ local new_maker = function(filepath, bufnr, opts)
     end
   }):sync()
 end
+
+-- add force delete action
+actions.delete_buffer_force = function(prompt_bufnr)
+  local current_picker = action_state.get_current_picker(prompt_bufnr)
+  current_picker:delete_selection(function(selection)
+    local ok = pcall(vim.api.nvim_buf_delete, selection.bufnr, { force = true })
+    return ok
+  end)
+end
+
 require('telescope').load_extension('fzf')
 require("telescope").setup {
   defaults = {
@@ -55,8 +66,8 @@ require("telescope").setup {
       show_all_buffers = true,
       sort_lastused = true,
       mappings = {
-        n = {
-          ["d"] = "delete_buffer",
+        i = {
+          ["<C-d>"] = "delete_buffer_force",
         }
       }
     },

@@ -111,7 +111,6 @@ local function setup_go_configuration(dap)
       name = "Debug",
       request = "launch",
       program = "${file}",
-      env = {}
     },
     {
       type = "go",
@@ -131,6 +130,7 @@ local function setup_go_configuration(dap)
       program = "${workspaceFolder}/cmd/"..service.."/main.go",
       env = {
         PROFILE="DEV",
+				LOG_LEVEL="INFO",
         CONFIG_FILE="${workspaceFolder}/conf/"..service.."/conf-dev.yaml"
       }
     }, 
@@ -156,14 +156,12 @@ local function setup_go_configuration(dap)
       mode = "local",
       request = "attach",
       processId = require('dap.utils').pick_process,
-      env = {}
     },
     {
       type = "go",
       name = "Debug main",
       request = "launch",
       program = "${workspaceFolder}/main.go",
-      env = {}
     }, 
     {
       type = "go",
@@ -171,7 +169,6 @@ local function setup_go_configuration(dap)
       request = "launch",
       mode = "test",
       program = "${file}",
-      env = {}
     },
     {
       type = "go",
@@ -179,7 +176,6 @@ local function setup_go_configuration(dap)
       request = "launch",
       mode = "test",
       program = "./${relativeFileDirname}",
-      env = {}
     },
   }
 end
@@ -352,7 +348,7 @@ require("dapui").setup({
         'repl',
         -- 'console',
       },
-      size = 10,
+      size = 13,
       position = 'bottom',
     },
   },
@@ -368,13 +364,13 @@ require("dapui").setup({
 })
 require("nvim-dap-virtual-text").setup{
     only_first_definition = true,
-    all_references = true,
+    all_references = false,
     show_stop_reason = true,
 }
 EOF
 
 nnoremap <silent> <F5> :lua require'dap'.continue()<CR>
-nnoremap <silent> <F6> :lua require'dap'.close()<CR>
+nnoremap <silent> <F6> :lua require'dap'.terminate()<CR>
 nnoremap <silent> <F7> :lua require'dap'.step_into()<CR>
 nnoremap <silent> <F8> :lua require'dap'.step_over()<CR>
 nnoremap <silent> <F9> :lua require'dap'.step_out()<CR>

@@ -68,7 +68,7 @@ Plug 'mfussenegger/nvim-jdtls'
 
 Plug 'ThePrimeagen/harpoon'
 
-Plug 'mfussenegger/nvim-dap'
+Plug 'mfussenegger/nvim-dap', {'tag': '0.3.0'}
 Plug 'rcarriga/nvim-dap-ui'
 Plug 'theHamsta/nvim-dap-virtual-text'
 
@@ -172,4 +172,5 @@ vim.api.nvim_create_user_command('UUID',
     end,
     { nargs = 0 }
 )
+
 EOF
