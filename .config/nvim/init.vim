@@ -173,4 +173,12 @@ vim.api.nvim_create_user_command('UUID',
     { nargs = 0 }
 )
 
+vim.api.nvim_create_user_command('PathToClipboard',
+    function()
+		  local currPath = vim.fn.expand('%:p')
+			vim.fn.setreg('+', currPath)
+    end,
+    { nargs = 0 }
+)
+
 EOF

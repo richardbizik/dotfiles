@@ -168,7 +168,7 @@ nvim_lsp.gopls.setup {
     },
 }
 
-nvim_lsp.sumneko_lua.setup {
+nvim_lsp.lua_ls.setup {
     settings = {
         Lua = {
             runtime = {
@@ -226,7 +226,7 @@ local servers = {
     'golangci_lint_ls',
     'yamlls',
     'volar',
-    'sumneko_lua',
+    'lua_ls',
     'pyright',
     'tsserver',
     'eslint',

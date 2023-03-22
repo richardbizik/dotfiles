@@ -130,7 +130,7 @@ local function setup_go_configuration(dap)
       program = "${workspaceFolder}/cmd/"..service.."/main.go",
       env = {
         PROFILE="DEV",
-				LOG_LEVEL="INFO",
+        LOG_LEVEL="INFO",
         CONFIG_FILE="${workspaceFolder}/conf/"..service.."/conf-dev.yaml"
       }
     }, 

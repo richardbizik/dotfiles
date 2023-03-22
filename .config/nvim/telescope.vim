@@ -52,6 +52,7 @@ end
 require('telescope').load_extension('fzf')
 require("telescope").setup {
   defaults = {
+		-- path_display = {shorten=2},
     buffer_preview_marker = new_marker, 
     mappings = {
         i = {
