@@ -2,6 +2,7 @@ lua << EOF
 
 local dap_g = require "dap"
 local query = require "vim.treesitter.query"
+local treesitter = require "vim.treesitter"
 local tests_query = [[
 (function_declaration
   name: (identifier) @testname
@@ -187,6 +188,8 @@ function setup()
 end
 
 local function debug_test(testname)
+  -- match the exact test name
+  local test_regex = "^"..testname.."$"
   local dap = load_module("dap")
   dap.run({
       type = "go",
@@ -194,7 +197,7 @@ local function debug_test(testname)
       request = "launch",
       mode = "test",
       program = "./${relativeFileDirname}",
-      args = {"-test.run", testname},
+      args = {"-test.run", test_regex},
       env = {
         PROFILE="TEST",
         CONFIG_FILE="${workspaceFolder}/conf/"..get_default_service().."/conf-test.yaml"
@@ -252,14 +255,14 @@ local function get_closest_test()
 
   local test_tree = {}
 
-  local test_query = vim.treesitter.parse_query(ft, tests_query)
+  local test_query = query.parse(ft, tests_query)
   assert(test_query, 'dap-go error: could not parse test query')
   for _, match, _ in test_query:iter_matches(root, 0, 0, stop_row) do
     local test_match = {}
     for id, node in pairs(match) do
       local capture = test_query.captures[id]
       if capture == "testname" then
-        local name = query.get_node_text(node, 0)
+        local name = treesitter.get_node_text(node, 0)
         test_match.name = name
       end
       if capture == "parent" then
@@ -269,14 +272,14 @@ local function get_closest_test()
     table.insert(test_tree, test_match)
   end
 
-  local subtest_query = vim.treesitter.parse_query(ft, subtests_query)
+  local subtest_query = query.parse(ft, subtests_query)
   assert(subtest_query, 'dap-go error: could not parse test query')
   for _, match, _ in subtest_query:iter_matches(root, 0, 0, stop_row) do
     local test_match = {}
     for id, node in pairs(match) do
       local capture = subtest_query.captures[id]
       if capture == "testname" then
-        local name = query.get_node_text(node, 0)
+        local name = treesitter.get_node_text(node, 0)
         test_match.name = string.gsub(string.gsub(name, ' ', '_'), '"', '')
       end
       if capture == "parent" then
