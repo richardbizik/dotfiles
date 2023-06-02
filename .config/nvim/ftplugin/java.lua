@@ -1,7 +1,7 @@
 local set = vim.opt -- set options
-set.tabstop = 4
-set.softtabstop = 4
-set.shiftwidth = 4
+set.tabstop = 2
+set.softtabstop = 2
+set.shiftwidth = 2
 set.expandtab = true
 local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
 capabilities.textDocument.completion.completionItem.snippetSupport = true
@@ -34,7 +34,7 @@ local function on_attach(client, bufnr)
             console = "internalConsole",
             vmArgs = function()
                 local profile = vim.fn.input('Spring profile: ')
-                return "-Dspring.profiles.active=" .. profile
+                return "--add-opens java.base/java.time=ALL-UNNAMED -Dspring.profiles.active=" .. profile
             end,
         },
     })
@@ -55,6 +55,14 @@ local function on_attach(client, bufnr)
     vim.cmd([[command! -buffer JdtJol lua require('jdtls').jol()]])
     vim.cmd([[command! -buffer JdtBytecode lua require('jdtls').javap()]])
     vim.cmd([[command! -buffer JdtJshell lua require('jdtls').jshell()]])
+    vim.api.nvim_create_user_command('LR',
+        function()
+            vim.api.nvim_command('LspRestart')
+            require('jdtls.setup').wipe_data_and_restart()
+            vim.diagnostic.reset()
+        end,
+        { nargs = 0 }
+    )
 end
 
 local cmd = {
@@ -66,10 +74,6 @@ local cmd = {
     "-Dlog.level=ALL",
     "-Xms1g",
     "--add-modules=ALL-SYSTEM",
-    "--add-opens",
-    "java.base/java.util=ALL-UNNAMED",
-    "--add-opens",
-    "java.base/java.lang=ALL-UNNAMED",
     "-javaagent:" .. lombok_path,
     "-jar",
     "--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED",
@@ -82,6 +86,12 @@ local cmd = {
     "--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED",
     "--add-opens=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED",
     "--add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED",
+    "--add-opens",
+    "java.base/java.util=ALL-UNNAMED",
+    "--add-opens",
+    "java.base/java.lang=ALL-UNNAMED",
+    "--add-opens",
+    "java.base/java.time=ALL-UNNAMED",
     jdtls_jar_path,
     "-configuration",
     jdtls_config_path,
@@ -94,6 +104,7 @@ local config = {
     root_dir = require("jdtls.setup").find_root({ ".git" }),
     settings = {
         java = {
+            contentProvider = { preferred = 'fernflower' },
             configuration = {
                 runtimes = {
                     {
@@ -106,7 +117,7 @@ local config = {
                     },
                     {
                         name = "JavaSE-17",
-                        path = "/usr/lib/jvm/java-17-openjdk/",
+                        path = "/usr/lib/jvm/java-17-temurin/",
                     },
                 },
             },
@@ -126,35 +137,3 @@ require("jdtls").start_or_attach(config)
 vim.cmd([[nnoremap <leader>dt <Cmd>lua require'jdtls'.test_nearest_method()<CR>]])
 vim.cmd([[nnoremap <leader>dc <Cmd>lua require'jdtls'.test_class()<CR>]])
 
--- add generated sources to resources org.eclipse.core.resources.prefs
---
--- encoding//src/generated/java=UTF-8
--- encoding//src/generated/resources=UTF-8
---
--- add generated sources to module .classpath
---
---
--- <classpathentry kind="src" output="target/classes" path="src/generated/java">
---     <attributes>
---         <attribute name="optional" value="true"/>
---         <attribute name="maven.pomderived" value="true"/>
---     </attributes>
--- </classpathentry>
--- <classpathentry excluding="" kind="src" output="target/classes" path="src/generated/resources">
---     <attributes>
---         <attribute name="maven.pomderived" value="true"/>
---     </attributes>
--- </classpathentry>
--- <classpathentry kind="src" output="target/test-classes" path="src/test/generated/java">
---     <attributes>
---         <attribute name="optional" value="true"/>
---         <attribute name="maven.pomderived" value="true"/>
---         <attribute name="test" value="true"/>
---     </attributes>
--- </classpathentry>
--- <classpathentry excluding="" kind="src" output="target/test-classes" path="src/test/generated/resources">
---     <attributes>
---         <attribute name="maven.pomderived" value="true"/>
---         <attribute name="test" value="true"/>
---     </attributes>
--- </classpathentry>

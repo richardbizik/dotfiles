@@ -5,6 +5,16 @@ local util = require 'lspconfig/util'
 local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
 capabilities.textDocument.completion.completionItem.snippetSupport = true
 
+vim.diagnostic.config({
+  virtual_text = {
+    -- source = "always",  -- Or "if_many"
+    -- prefix = '●', -- Could be '■', '▎', 'x'
+  },
+  severity_sort = true,
+  float = {
+    source = "always",  -- Or "if_many"
+  },
+})
 
 -- Setup nvim-cmp.
 local has_words_before = function()
@@ -146,11 +156,14 @@ m.on_attach = function(client, bufnr)
         end,
         { nargs = 0 }
     )
-
 end
 
 nvim_lsp.gopls.setup {
     cmd = { 'gopls', 'serve' },
+    on_attach = m.on_attach,
+    flags = {
+        debounce_text_changes = 150,
+    },
     capabilities = capabilities,
     settings = {
         gopls = {
@@ -169,6 +182,11 @@ nvim_lsp.gopls.setup {
 }
 
 nvim_lsp.lua_ls.setup {
+    on_attach = m.on_attach,
+    flags = {
+        debounce_text_changes = 150,
+    },
+    capabilities = capabilities,
     settings = {
         Lua = {
             runtime = {
@@ -192,52 +210,76 @@ nvim_lsp.lua_ls.setup {
 }
 
 nvim_lsp.ccls.setup {
+    on_attach = m.on_attach,
+    flags = {
+        debounce_text_changes = 150,
+    },
+    capabilities = capabilities,
     init_options = {
-        compilationDatabaseDirectory = "build";
+        compilationDatabaseDirectory = "build",
         index = {
-            threads = 0;
-        };
+            threads = 0,
+        },
         clang = {
-            excludeArgs = { "-frounding-math" };
-        };
+            excludeArgs = { "-frounding-math" },
+        },
     }
 }
 
-nvim_lsp.bashls.setup {}
-nvim_lsp.cmake.setup {}
-nvim_lsp.golangci_lint_ls.setup {}
-nvim_lsp.rust_analyzer.setup {}
-nvim_lsp.eslint.setup {}
-nvim_lsp.tsserver.setup{}
-nvim_lsp.svelte.setup {}
 nvim_lsp.volar.setup {
-    root_dir = util.root_pattern("package.json", ".git/");
+    on_attach = m.on_attach,
+    flags = {
+        debounce_text_changes = 150,
+    },
+    capabilities = capabilities,
+    root_dir = util.root_pattern("package.json", ".git/"),
     init_options = {
         typescript = {
             tsdk = '/usr/lib/node_modules/typescript/lib'
         }
     }
 }
+nvim_lsp.yamlls.setup {
+    on_attach = m.on_attach,
+    flags = {
+        debounce_text_changes = 150,
+    },
+    capabilities = capabilities,
+    settings = {
+        yaml = {
+            keyOrdering = false,
+        }
+    }
+}
 
+-- nvim_lsp.bashls.setup {}
+-- nvim_lsp.cmake.setup {}
+-- nvim_lsp.golangci_lint_ls.setup {}
+-- nvim_lsp.rust_analyzer.setup {}
+-- nvim_lsp.eslint.setup {}
+-- nvim_lsp.tsserver.setup {}
+-- nvim_lsp.svelte.setup {}
 
+-- commented servers are configured above
 local servers = {
-    'ccls',
-    'gopls',
+    -- 'ccls',
+    -- 'gopls',
     'golangci_lint_ls',
-    'yamlls',
+    -- 'yamlls',
     'volar',
     'lua_ls',
     'pyright',
     'tsserver',
-    'eslint',
+    -- 'eslint',
     'svelte',
     'html',
     'cmake',
     'bashls',
     'rust_analyzer'
 }
+
 for _, lsp in ipairs(servers) do
-    nvim_lsp[lsp].setup {
+    nvim_lsp[lsp]["setup"] {
         on_attach = m.on_attach,
         flags = {
             debounce_text_changes = 150,
@@ -245,6 +287,7 @@ for _, lsp in ipairs(servers) do
         capabilities = capabilities,
     }
 end
+
 
 
 function goimports(timeoutms)

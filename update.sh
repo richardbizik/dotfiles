@@ -1,5 +1,9 @@
 #!/usr/bin/bash
 
+# profiles
+cp ~/.profile ./.profile
+cp ~/.bashrc ./.bashrc
+cp ~/.zshrc ./.zshrc
 
 # neovim
 cp ~/.config/nvim/cmp.vim ./.config/nvim/
