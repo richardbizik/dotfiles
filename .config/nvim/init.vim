@@ -48,6 +48,7 @@ filetype off       " required
 " store the plugins in plugged dir
 call plug#begin('~/.config/nvim/plugged')
 Plug 'morhetz/gruvbox'
+Plug 'norcalli/nvim-colorizer.lua'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
 Plug 'preservim/nerdtree'
@@ -87,6 +88,7 @@ Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
 
 Plug 'tpope/vim-dadbod'
 Plug 'kristijanhusak/vim-dadbod-ui'
+Plug 'kristijanhusak/vim-dadbod-completion'
 
 Plug 'L3MON4D3/LuaSnip'
 Plug 'saadparwaiz1/cmp_luasnip'
@@ -114,12 +116,12 @@ source ~/.config/nvim/harpoon.vim
 source ~/.config/nvim/lualine.vim
 source ~/.config/nvim/nerdtree.vim
 source ~/.config/nvim/treesitter.vim
-source ~/.config/nvim/cmp.vim
 source ~/.config/nvim/dap.vim
 source ~/.config/nvim/secret.vim
 
-lua require('Comment').setup()
+lua require("Comment").setup()
 lua require("lsp_config")
+lua require("colorizer").setup()
 
 hi LspDiagnosticsVirtualTextError guifg=red gui=bold,italic,underline
 hi LspDiagnosticsVirtualTextWarning guifg=orange gui=bold,italic,underline

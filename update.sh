@@ -6,7 +6,6 @@ cp ~/.bashrc ./.bashrc
 cp ~/.zshrc ./.zshrc
 
 # neovim
-cp ~/.config/nvim/cmp.vim ./.config/nvim/
 cp ~/.config/nvim/dap.vim ./.config/nvim/
 cp ~/.config/nvim/harpoon.vim ./.config/nvim/
 cp ~/.config/nvim/init.vim ./.config/nvim/
