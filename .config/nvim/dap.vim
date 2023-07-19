@@ -115,7 +115,7 @@ local function setup_go_configuration(dap)
     },
     {
       type = "go",
-      name = "Debug test (nghis)",
+      name = "Debug test (generator)",
       request = "launch",
       mode = "test",
       program = "${workspaceFolder}/test/rest",
@@ -126,7 +126,7 @@ local function setup_go_configuration(dap)
     },
     {
       type = "go",
-      name = "Debug main (nghis)",
+      name = "Debug main (generator)",
       request = "launch",
       program = "${workspaceFolder}/cmd/"..service.."/main.go",
       env = {
@@ -137,7 +137,7 @@ local function setup_go_configuration(dap)
     }, 
     {
       type = "go",
-      name = "Debug custom main (nghis)",
+      name = "Debug custom main (generator)",
       request = "launch",
       program = function()
                 local exec = vim.fn.input('Executable: ')

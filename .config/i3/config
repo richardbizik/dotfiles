@@ -483,7 +483,6 @@ set $top_monitor DP-1
 exec --no-startup-id i3-msg 'workspace 2; append_layout ~/.config/i3/workspace-2.json'
 exec --no-startup-id i3-msg 'workspace 3; append_layout ~/.config/i3/workspace-3.json'
 exec --no-startup-id i3-msg 'workspace 4; append_layout ~/.config/i3/workspace-4.json'
-exec --no-startup-id i3-msg 'workspace 5; append_layout ~/.config/i3/workspace-5.json'
 
 workspace 2 output $top_monitor
 workspace 3 output $top_monitor
@@ -506,5 +505,4 @@ exec --no-startup-id i3-msg 'workspace 2;exec signal-desktop'
 
 exec --no-startup-id i3-msg 'workspace 4;exec chromium'
 
-exec --no-startup-id i3-msg 'workspace 5;exec steam'
 

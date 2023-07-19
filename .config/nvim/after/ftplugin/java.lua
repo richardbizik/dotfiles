@@ -3,6 +3,7 @@ set.tabstop = 2
 set.softtabstop = 2
 set.shiftwidth = 2
 set.expandtab = true
+set.autoread = true
 local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
 capabilities.textDocument.completion.completionItem.snippetSupport = true
 
@@ -26,8 +27,18 @@ local lombok_path = home_path .. "/dev/lsp/lombok/lombok.jar"
 local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ":p:h:t")
 local jdtls_data_path = home_path .. "/java_workspace/" .. project_name
 
+local function format_using_make()
+    local pos = vim.api.nvim_win_get_cursor(0)
+    if vim.bo.modified then
+        vim.cmd('w')
+    end
+    local format_cmd = vim.api.nvim_parse_cmd("silent make format", {})
+    local out = vim.api.nvim_cmd(format_cmd, {})
+    vim.api.nvim_win_set_cursor(0, pos)
+end
+
 local function on_attach(client, bufnr)
-    require("lsp_config").on_attach(client, bufnr)
+    -- require("lsp_config").on_attach(client, bufnr)
     require("jdtls").setup_dap({
         hotcodereplace = "auto",
         config_overrides = {
@@ -63,6 +74,40 @@ local function on_attach(client, bufnr)
         end,
         { nargs = 0 }
     )
+    local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
+
+    local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
+
+    buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
+
+    local bufopts = { noremap = true, silent = true, buffer = bufnr }
+    -- Mappings.
+    vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
+    vim.keymap.set('n', 'ca', vim.lsp.buf.code_action, bufopts)
+    vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
+    vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, bufopts)
+    vim.keymap.set('n', '<leader>wa', vim.lsp.buf.add_workspace_folder, bufopts)
+    vim.keymap.set('n', '<leader>wr', vim.lsp.buf.remove_workspace_folder, bufopts)
+    vim.keymap.set('n', '<leader>wl', function()
+        print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+    end, bufopts)
+    vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, bufopts)
+    -- replaced by telescope
+    -- buf_set_keymap('n', '<leader>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
+    -- buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
+    -- buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
+    -- buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
+
+    -- Set some keybinds conditional on server capabilities
+    local format_exit = os.execute("make -q format") / 256
+    print(format_exit)
+    if format_exit ~= 2 then
+        local opts = { noremap = true, silent = true }
+        vim.keymap.set('n', 'ff', format_using_make, opts)
+    end
+    if format_exit == 2 and client.server_capabilities.documentFormattingProvider then
+        buf_set_keymap("n", "ff", "<cmd>lua vim.lsp.buf.format{async=true}<CR>", opts)
+    end
 end
 
 local cmd = {
@@ -104,6 +149,12 @@ local config = {
     root_dir = require("jdtls.setup").find_root({ ".git" }),
     settings = {
         java = {
+            format = {
+                settings = {
+                    url = "https://raw.githubusercontent.com/diffplug/freshmark/main/spotless.eclipseformat.xml",
+                }
+            },
+            signatureHelp = { enabled = true },
             contentProvider = { preferred = 'fernflower' },
             configuration = {
                 runtimes = {
@@ -121,6 +172,33 @@ local config = {
                     },
                 },
             },
+            -- saveActions = {
+            --     organizeImports = true,
+            -- },
+            completion = {
+                favoriteStaticMembers = {
+                    "io.crate.testing.Asserts.assertThat",
+                    "org.assertj.core.api.Assertions.assertThat",
+                    "org.assertj.core.api.Assertions.assertThatThrownBy",
+                    "org.assertj.core.api.Assertions.assertThatExceptionOfType",
+                    "org.assertj.core.api.Assertions.catchThrowable",
+                    "org.hamcrest.MatcherAssert.assertThat",
+                    "org.hamcrest.Matchers.*",
+                    "org.hamcrest.CoreMatchers.*",
+                    "org.junit.jupiter.api.Assertions.*",
+                    "java.util.Objects.requireNonNull",
+                    "java.util.Objects.requireNonNullElse",
+                    "org.mockito.Mockito.*",
+                    "org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*",
+                },
+                filteredTypes = {
+                    "com.sun.*",
+                    "io.micrometer.shaded.*",
+                    "java.awt.*",
+                    "jdk.*",
+                    "sun.*",
+                },
+            }
         },
     },
     init_options = {
@@ -136,4 +214,3 @@ require("jdtls").start_or_attach(config)
 
 vim.cmd([[nnoremap <leader>dt <Cmd>lua require'jdtls'.test_nearest_method()<CR>]])
 vim.cmd([[nnoremap <leader>dc <Cmd>lua require'jdtls'.test_class()<CR>]])
-

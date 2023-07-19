@@ -6,14 +6,14 @@ local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protoc
 capabilities.textDocument.completion.completionItem.snippetSupport = true
 
 vim.diagnostic.config({
-  virtual_text = {
-    -- source = "always",  -- Or "if_many"
-    -- prefix = '●', -- Could be '■', '▎', 'x'
-  },
-  severity_sort = true,
-  float = {
-    source = "always",  -- Or "if_many"
-  },
+    virtual_text = {
+        -- source = "always",  -- Or "if_many"
+        -- prefix = '●', -- Could be '■', '▎', 'x'
+    },
+    severity_sort = true,
+    float = {
+        source = "always", -- Or "if_many"
+    },
 })
 
 -- Setup nvim-cmp.
@@ -189,6 +189,13 @@ nvim_lsp.lua_ls.setup {
     capabilities = capabilities,
     settings = {
         Lua = {
+            format = {
+                enable = true,
+                defaultConfig = {
+                    indent_style = "space",
+                    indent_size = "2",
+                }
+            },
             runtime = {
                 -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
                 version = 'LuaJIT',
