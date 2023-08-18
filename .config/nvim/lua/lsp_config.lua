@@ -145,10 +145,6 @@ m.on_attach = function(client, bufnr)
     -- buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
     -- buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
 
-    -- Set some keybinds conditional on server capabilities
-    if client.server_capabilities.documentFormattingProvider then
-        buf_set_keymap("n", "ff", "<cmd>lua vim.lsp.buf.format{async=true}<CR>", opts)
-    end
     vim.api.nvim_create_user_command('LR',
         function()
             vim.api.nvim_command('LspRestart')
@@ -156,6 +152,19 @@ m.on_attach = function(client, bufnr)
         end,
         { nargs = 0 }
     )
+
+    -- disable formatting with tsserver and use eslint
+    if client.name == "eslint" then
+        client.server_capabilities.documentFormattingProvider = true
+        buf_set_keymap("n", "ff", "<cmd>ALEFix<CR>", opts)
+        return
+    elseif client.name == "tsserver" then
+        client.server_capabilities.documentFormattingProvider = false
+    end
+    -- Set some keybinds conditional on server capabilities
+    if client.server_capabilities.documentFormattingProvider then
+        buf_set_keymap("n", "ff", "<cmd>lua vim.lsp.buf.format{async=true}<CR>", opts)
+    end
 end
 
 nvim_lsp.gopls.setup {
@@ -246,6 +255,7 @@ nvim_lsp.volar.setup {
         }
     }
 }
+
 nvim_lsp.yamlls.setup {
     on_attach = m.on_attach,
     flags = {
@@ -266,7 +276,6 @@ nvim_lsp.yamlls.setup {
 -- nvim_lsp.eslint.setup {}
 -- nvim_lsp.tsserver.setup {}
 -- nvim_lsp.svelte.setup {}
-
 -- commented servers are configured above
 local servers = {
     -- 'ccls',
@@ -277,7 +286,7 @@ local servers = {
     'lua_ls',
     'pyright',
     'tsserver',
-    -- 'eslint',
+    'eslint',
     'svelte',
     'html',
     'cmake',

@@ -1,0 +1,65 @@
+#
+# Color definition
+#
+
+set $c1 #fd472f
+set $c2 #d79921
+set $c3 #d77512
+set $c4 #504945
+set $c5 #282828
+
+
+set $white #f4f4f8
+set $dark #333333
+set $dim #666666
+
+
+set $focused_bgcolor $c2
+set $focused_textcolor $dark
+set $focused_indicator $c3
+
+set $inactive_bgcolor $c5
+set $inactive_textcolor $white
+set $inactive_indicator $c5
+
+set $unfocused_bgcolor $c4
+set $unfocused_textcolor $dim
+set $unfocused_indicator $c5
+
+set $urgent_bgcolor $c1
+set $urgent_textcolor $c4
+set $urgent_indicator $c3
+
+#
+# Appearance:
+#
+
+# Set inner/outer gaps
+default_border normal 0
+gaps inner 5
+gaps outer 0
+
+# Smart gaps (gaps used if only more than one container on the workspace)
+smart_gaps on
+
+# Smart borders (draw borders around container only if it is not the only container on this workspace) 
+smart_borders on
+
+# Hide Title Bars
+for_window [app_id="^.*"] border pixel 4, opacity 1
+default_border pixel 5
+default_floating_border pixel 10
+hide_edge_borders smart
+
+client.focused $focused_bgcolor $focused_bgcolor $focused_textcolor $focused_indicator $focused_bgcolor
+client.focused_inactive $inactive_bgcolor $inactive_bgcolor $inactive_textcolor $inactive_indicator $inactive_bgcolor
+client.unfocused $unfocused_bgcolor $unfocused_bgcolor $unfocused_textcolor $unfocused_indicator $unfocused_bgcolor
+client.urgent $urgent_bgcolor $urgent_bgcolor $urgent_textcolor $urgent_indicator $urgent_bgcolor
+
+#
+# Status Bar:
+#
+# Read `man 5 sway-bar` for more information about this section.
+bar {
+    swaybar_command waybar
+}

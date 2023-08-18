@@ -117,7 +117,6 @@ local function_node_types = {
 }
 
 local function go_result_type(info)
-  print(vim.inspect(info))
   local cursor_node = ts_utils.get_node_at_cursor()
   local scope = ts_locals.get_scope_tree(cursor_node, 0)
 

@@ -66,6 +66,13 @@ Plug 'hrsh7th/nvim-cmp'
 Plug 'rafamadriz/friendly-snippets'
 Plug 'alloyed/lua-lsp'
 Plug 'mfussenegger/nvim-jdtls'
+Plug 'dense-analysis/ale'
+let g:ale_fix_on_save=1
+let g:ale_fixers = {
+\   'typescript': ['prettier'],
+\   'typescriptreact': ['prettier'],
+\   'css': ['prettier'],
+\}
 
 Plug 'ThePrimeagen/harpoon'
 
@@ -78,6 +85,7 @@ Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
 Plug 'nvim-telescope/telescope-ui-select.nvim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'nvim-treesitter/nvim-treesitter-context'
+Plug 'nvim-treesitter/playground'
 Plug 'nvim-lua/plenary.nvim'
 
 Plug 'numToStr/Comment.nvim'
@@ -93,6 +101,9 @@ Plug 'kristijanhusak/vim-dadbod-completion'
 Plug 'L3MON4D3/LuaSnip'
 Plug 'saadparwaiz1/cmp_luasnip'
 Plug 'rafamadriz/friendly-snippets'
+
+Plug 'richardbizik/nvim-toc'
+" Plug '/mnt/fast/projects/personal/nvim-toc'
 call plug#end()
 
 let g:NERDTreeChDirMode = 2
@@ -122,6 +133,7 @@ source ~/.config/nvim/secret.vim
 lua require("Comment").setup()
 lua require("lsp_config")
 lua require("colorizer").setup()
+lua require("nvim-toc").setup()
 
 hi LspDiagnosticsVirtualTextError guifg=red gui=bold,italic,underline
 hi LspDiagnosticsVirtualTextWarning guifg=orange gui=bold,italic,underline
