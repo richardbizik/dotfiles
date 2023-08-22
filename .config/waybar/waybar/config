@@ -16,16 +16,18 @@
  
     "modules-center": [
         "clock",
+				"custom/spotify",
     ],
 
     "modules-right": [
-        "network",
+				"custom/uptime",
+        //"network",
         "idle_inhibitor",
         "memory",
 				"temperature",
         "cpu",
         "pulseaudio",
-        "custom/keyboard-layout",
+        //"custom/keyboard-layout",
         "battery",
         //"custom/PBPbattery",
         "backlight#icon",
@@ -36,7 +38,13 @@
     ],
 
     // Modules
-
+		"user": {
+				"format": "{user} (up {work_d} days ↑)",
+				"interval": 60,
+				"height": 30,
+				"width": 30,
+				"icon": true,
+		},
     "idle_inhibitor": {
         "format": "{icon} ",
         "format-icons":{
@@ -66,9 +74,8 @@
 
     "clock": {
         "interval": 1,
-        "format-alt": " {:%e %b %Y}", // Icon: calendar-alt
         "format": "{:%H:%M:%OS - %d.%m.%Y}",
-        "tooltip-format": "{:%e %B %Y}"
+        "tooltip-format": "{:%A}"
     },
 
     "cpu": {
@@ -125,7 +132,8 @@
 
     "sway/window": {
         "format": "{}",
-        "max-length": 120
+        "max-length": 120,
+				"all-outputs": true,
     },
 
     "sway/workspaces": {
@@ -223,4 +231,17 @@
         "on-click": "~/.config/rofi/powermenu/type-2/powermenu.sh &",
         "tooltip": false,
     },
+
+    "custom/uptime": {
+		    "interval": 60,
+				"format": {},
+				"exec": "~/.config/waybar/scripts/uptime.sh"
+    },
+
+		"custom/spotify": {
+		    "interval": 5,
+		    "exec": "python3 $HOME/.config/polybar/scripts/spotify_status.py -f '{artist}: {song}'",
+				"format": "{}",
+				"on-click": "playerctl --player=spotify play-pause",
+		},
 }

@@ -68,6 +68,8 @@ Plug 'alloyed/lua-lsp'
 Plug 'mfussenegger/nvim-jdtls'
 Plug 'dense-analysis/ale'
 let g:ale_fix_on_save=1
+let g:ale_disable_lsp = 1
+let g:ale_use_neovim_diagnostics_api = 1
 let g:ale_fixers = {
 \   'typescript': ['prettier'],
 \   'typescriptreact': ['prettier'],

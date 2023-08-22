@@ -37,3 +37,4 @@ fi
 cp -R ~/.config/sway ./.config/sway
 cp -R ~/.config/waybar ./.config/waybar
 cp -R ~/.config/rofi ./.config/rofi
+cp -R ~/.config/mako ./.config/mako
