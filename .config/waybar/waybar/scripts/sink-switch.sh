@@ -1,13 +1,13 @@
 #!/bin/bash
-speakers="alsa_output.1.analog-stereo"
-headphones="alsa_output.usb-SteelSeries_Arctis_Pro_Wireless-00.stereo-game"
+speakers=$(pactl list short sinks | grep HiFi__hw_Audio__sink | awk '{print $2}')
+headphones=$(pactl list short sinks | grep stereo-game | awk '{print $$2}')
 arg="${1:-}"
 
-activate_sink () {
+activate_sink() {
 	SINK="$1"
-	pacmd set-default-sink "$SINK"
-	pacmd list-sink-inputs | grep index | while read line; do
-		pacmd move-sink-input `echo $line | cut -f2 -d' '` "$SINK"
+	pactl set-default-sink "$SINK"
+	pactl list sink-inputs short | awk '{print $1}' | while read line; do
+		pactl move-sink-input `echo $line` "$SINK"
 	done
 }
 

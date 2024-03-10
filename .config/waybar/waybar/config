@@ -101,7 +101,7 @@
 
     "memory": {
         "interval": 5,
-        "format": " {}%", // Icon: memory
+        "format": " {used}/{total} GB", // Icon: memory
         "on-click": "kitty -e 'htop'", 
         "states": {
             "warning": 70,
@@ -168,6 +168,7 @@
             "default": [""]
         },
         "on-click": "pavucontrol",
+				"on-click-middle": "~/.config/waybar/scripts/sink-switch.sh --toggle",
         "on-scroll-up": "pactl set-sink-volume @DEFAULT_SINK@ +2%",
         "on-scroll-down": "pactl set-sink-volume @DEFAULT_SINK@ -2%",
     },

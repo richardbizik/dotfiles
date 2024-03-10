@@ -1,18 +1,21 @@
 # Assign workspaces
 assign [app_id="chromium" title="misc"] 3
-for_window [app_id="chromium"] focus
+# for_window [class="Chromium"] focus
 
-assign [class="chromium" title="main"] 4
-for_window [class="chromium"] focus
+assign [app_id="chromium" title="main"] 4
+# for_window [class="Chromium"] focus
 
 assign [class="Spotify"] 2
-for_window [class="Spotify"] focus
+# for_window [class="Spotify"] focus
 
 assign [class="Signal"] 2
-for_window [class="Signal"] focus
+# for_window [class="Signal"] focus
 
 assign [class="discord"] 2
-for_window [class="discord"] focus
+# for_window [class="discord"] focus
+
+assign [class="steam"] 5
+# for_window [class="steam"] focus
 
 for_window [app_id="xed"] focus
 

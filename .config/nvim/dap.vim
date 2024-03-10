@@ -55,6 +55,7 @@ vim.fn.sign_define('DapBreakpointCodition', {text='⯁', texthl='', linehl='', n
 
 local function setup_go_adapter(dap)
   dap.defaults.fallback.terminal_win_cmd = '50vsplit new'
+
   dap.adapters.go = function(callback, config)
     local stdout = vim.loop.new_pipe(false)
     local handle
@@ -78,8 +79,13 @@ local function setup_go_adapter(dap)
     stdout:read_start(function(err, chunk)
       assert(not err, err)
       if chunk then
+        local s = chunk:gsub('\x1b%[%d+;%d+;%d+;%d+;%d+m','')
+                 :gsub('\x1b%[%d+;%d+;%d+;%d+m','')
+                 :gsub('\x1b%[%d+;%d+;%d+m','')
+                 :gsub('\x1b%[%d+;%d+m','')
+                 :gsub('\x1b%[%d+m','')
         vim.schedule(function()
-          require('dap.repl').append(chunk)
+          require('dap.repl').append(s)
         end)
       end
     end)
@@ -163,6 +169,9 @@ local function setup_go_configuration(dap)
       name = "Debug main",
       request = "launch",
       program = "${workspaceFolder}/main.go",
+      env = {
+        PROFILE="DEV",
+      },
     }, 
     {
       type = "go",

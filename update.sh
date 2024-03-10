@@ -7,13 +7,12 @@ cp ~/.zshrc ./.zshrc
 
 # neovim
 cp ~/.config/nvim/dap.vim ./.config/nvim/
-cp ~/.config/nvim/harpoon.vim ./.config/nvim/
+cp ~/.config/nvim/harpoon.lua ./.config/nvim/
 cp ~/.config/nvim/init.vim ./.config/nvim/
 cp -R ~/.config/nvim/lua/. ./.config/nvim/lua
 cp ~/.config/nvim/lualine.vim ./.config/nvim/
 cp ~/.config/nvim/nerdtree.vim ./.config/nvim/
 cp ~/.config/nvim/telescope.vim ./.config/nvim/
-cp ~/.config/nvim/treesitter.vim ./.config/nvim/
 cp ~/.config/nvim/vsnip.vim ./.config/nvim/
 cp -R ~/.config/nvim/after/. ./.config/nvim/after
 

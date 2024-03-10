@@ -66,17 +66,8 @@ Plug 'hrsh7th/nvim-cmp'
 Plug 'rafamadriz/friendly-snippets'
 Plug 'alloyed/lua-lsp'
 Plug 'mfussenegger/nvim-jdtls'
-Plug 'dense-analysis/ale'
-let g:ale_fix_on_save=1
-let g:ale_disable_lsp = 1
-let g:ale_use_neovim_diagnostics_api = 1
-let g:ale_fixers = {
-\   'typescript': ['prettier'],
-\   'typescriptreact': ['prettier'],
-\   'css': ['prettier'],
-\}
 
-Plug 'ThePrimeagen/harpoon'
+Plug 'ThePrimeagen/harpoon', {'branch': 'harpoon2'}
 
 Plug 'mfussenegger/nvim-dap', {'tag': '0.3.0'}
 Plug 'rcarriga/nvim-dap-ui'
@@ -104,8 +95,10 @@ Plug 'L3MON4D3/LuaSnip'
 Plug 'saadparwaiz1/cmp_luasnip'
 Plug 'rafamadriz/friendly-snippets'
 
-Plug 'richardbizik/nvim-toc'
-" Plug '/mnt/fast/projects/personal/nvim-toc'
+Plug 'stevearc/conform.nvim'
+
+" Plug 'richardbizik/nvim-toc'
+Plug '/mnt/fast/projects/personal/nvim-toc'
 call plug#end()
 
 let g:NERDTreeChDirMode = 2
@@ -124,16 +117,18 @@ let g:go_highlight_types = 1
 let g:go_auto_sameids = 1
 let g:go_auto_type_info = 1
 
+lua require("treesitter")
 source ~/.config/nvim/telescope.vim
-source ~/.config/nvim/harpoon.vim
+source ~/.config/nvim/harpoon.lua
+source ~/.config/nvim/harpoon.lua
 source ~/.config/nvim/lualine.vim
 source ~/.config/nvim/nerdtree.vim
-source ~/.config/nvim/treesitter.vim
 source ~/.config/nvim/dap.vim
 source ~/.config/nvim/secret.vim
 
 lua require("Comment").setup()
 lua require("lsp_config")
+lua require("templ")
 lua require("colorizer").setup()
 lua require("nvim-toc").setup()
 
@@ -144,6 +139,7 @@ hi LspDiagnosticsVirtualTextHint guifg=green gui=bold,italic,underline
 
 autocmd BufWritePre *.go lua vim.lsp.buf.format({async=true})
 autocmd BufWritePre *.go lua goimports(1000)
+autocmd BufWritePre *.templ lua goimports(1000)
 
 
 vmap <silent> <leader>ts :'<,'>!gojson<CR>
@@ -166,9 +162,12 @@ augroup XML
     autocmd FileType xml setlocal foldmethod=indent foldlevelstart=999 foldminlines=0
 augroup END
 
-
-
 lua << EOF
+require("conform").setup({
+  formatters_by_ft = {
+    templ = { "templ" },
+  },
+})
 local random = math.random
 local function uuid()
     local template ='xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
@@ -195,4 +194,7 @@ vim.api.nvim_create_user_command('PathToClipboard',
     { nargs = 0 }
 )
 
+vim.keymap.set("v", "<SC-J>", ":m '>+1<CR>gv=gv")
+vim.keymap.set("v", "<SC-K>", ":m '<-2<CR>gv=gv")
 EOF
+

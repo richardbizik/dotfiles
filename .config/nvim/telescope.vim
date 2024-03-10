@@ -15,7 +15,7 @@ nnoremap gd <cmd>lua require('telescope.builtin').lsp_definitions()<cr>
 nnoremap gi <cmd>lua require('telescope.builtin').lsp_implementations()<cr>
 nnoremap <leader>D <cmd>lua require('telescope.builtin').lsp_type_definitions()<cr>
 nnoremap gr <cmd>lua require('telescope.builtin').lsp_references()<cr>
-nnoremap <leader>ss <cmd>lua require('telescope.builtin').lsp_document_symbols()<cr>
+nnoremap <leader>ss <cmd>lua require('telescope.builtin').lsp_document_symbols({symbol_width=60})<cr>
 lua << EOF
 local previewers = require("telescope.previewers")
 local Job = require("plenary.job")
@@ -29,6 +29,7 @@ local new_maker = function(filepath, bufnr, opts)
     on_exit = function(j)
       local mime_type = vim.split(j:result()[1], "/")[1]
       if mime_type == "text" then
+        opts.dynamic_preview_title = true
         previewers.buffer_previewer_maker(filepath, bufnr, opts)
       else
         -- maybe we want to write something to the buffer here
@@ -52,7 +53,7 @@ end
 require('telescope').load_extension('fzf')
 require("telescope").setup {
   defaults = {
-		-- path_display = {shorten=2},
+    path_display = {"smart"},
     buffer_preview_marker = new_marker, 
     mappings = {
         i = {

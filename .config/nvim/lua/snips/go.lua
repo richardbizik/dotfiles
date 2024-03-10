@@ -54,7 +54,7 @@ local transforms = {
 
       return c(info.index, {
         t(info.err_name),
-        t(string.format('errors.Wrap(%s, "%s")', info.err_name, info.func_name)),
+        t(string.format('errors.Join(%s, errors.New("%s"))', info.err_name, info.func_name)),
       })
     else
       return t "err"

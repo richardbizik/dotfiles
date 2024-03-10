@@ -88,11 +88,8 @@ cmp.setup({
     },
     sources = cmp.config.sources({
         { name = 'nvim_lsp' },
-        --{ name = 'vsnip' }, -- For vsnip users.
         { name = 'buffer' },
         { name = 'luasnip' }, -- For luasnip users.
-        -- { name = 'ultisnips' }, -- For ultisnips users.
-        -- { name = 'snippy' }, -- For snippy users.
     })
 })
 
@@ -153,14 +150,14 @@ m.on_attach = function(client, bufnr)
         { nargs = 0 }
     )
 
-    -- disable formatting with tsserver and use eslint
-    if client.name == "eslint" then
-        client.server_capabilities.documentFormattingProvider = true
-        buf_set_keymap("n", "ff", "<cmd>ALEFix<CR>", opts)
-        return
-    elseif client.name == "tsserver" then
-        client.server_capabilities.documentFormattingProvider = false
-    end
+    -- -- disable formatting with tsserver and use eslint
+    -- if client.name == "eslint" then
+    --     client.server_capabilities.documentFormattingProvider = true
+    --     buf_set_keymap("n", "ff", "<cmd>ALEFix<CR>", opts)
+    --     return
+    -- elseif client.name == "tsserver" then
+    --     client.server_capabilities.documentFormattingProvider = false
+    -- end
     -- Set some keybinds conditional on server capabilities
     if client.server_capabilities.documentFormattingProvider then
         buf_set_keymap("n", "ff", "<cmd>lua vim.lsp.buf.format{async=true}<CR>", opts)
@@ -169,6 +166,7 @@ end
 
 nvim_lsp.gopls.setup {
     cmd = { 'gopls', 'serve' },
+    filetypes = { "go", "gomod", "gowork", "gotmpl" },
     on_attach = m.on_attach,
     flags = {
         debounce_text_changes = 150,
@@ -186,6 +184,7 @@ nvim_lsp.gopls.setup {
                 unusedwrite = true,
             },
             staticcheck = true,
+            templateExtensions = { "gotmpl" },
         },
     },
 }
@@ -269,9 +268,16 @@ nvim_lsp.yamlls.setup {
     }
 }
 
+nvim_lsp.golangci_lint_ls.setup {
+    on_attach = m.on_attach,
+    capabilities = capabilities,
+    init_options = {
+        command = { "golangci-lint", "run", "--enable-all", "--disable", "nosnakecase,varcheck,ifshort,interfacer,golint,structcheck,deadcode,maligned,scopelint,lll,exhaustivestruct,depguard,funlen,forbidigo,wsl,gci,gofumpt,exhaustruct,gochecknoglobals,gomnd,goerr113", "--out-format", "json", "--issues-exit-code=1" },
+    }
+}
+
 -- nvim_lsp.bashls.setup {}
 -- nvim_lsp.cmake.setup {}
--- nvim_lsp.golangci_lint_ls.setup {}
 -- nvim_lsp.rust_analyzer.setup {}
 -- nvim_lsp.eslint.setup {}
 -- nvim_lsp.tsserver.setup {}
@@ -280,7 +286,7 @@ nvim_lsp.yamlls.setup {
 local servers = {
     -- 'ccls',
     -- 'gopls',
-    'golangci_lint_ls',
+    -- 'golangci_lint_ls',
     -- 'yamlls',
     'volar',
     'lua_ls',
@@ -289,7 +295,11 @@ local servers = {
     'eslint',
     'svelte',
     'html',
+    'templ',
+    'htmx',
+    'tailwindcss',
     'cmake',
+    'autotools_ls',
     'bashls',
     'rust_analyzer'
 }

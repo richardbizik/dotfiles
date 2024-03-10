@@ -8,6 +8,8 @@ exec chromium
 exec discord
 exec signal-desktop
 exec spotify
+exec steam
+exec kitty
 
 # Network Applet
 exec nm-applet --indicator
