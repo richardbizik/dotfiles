@@ -4,13 +4,6 @@ exec /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 # Desktop notifications
 exec mako
 
-exec chromium
-exec discord
-exec signal-desktop
-exec spotify
-exec steam
-exec kitty
-
 # Network Applet
 exec nm-applet --indicator
 
@@ -21,6 +14,15 @@ exec hash dbus-update-activation-environment 2>/dev/null && \
      
 # Welcome App
 exec dex -a -s /etc/xdg/autostart/:~/.config/autostart/  
+
+exec /home/riso/start_virt_webcam.sh
+
+exec kitty
+exec steam
+exec signal-desktop
+exec discord
+exec spotify
+exec chromium
 
 # Sway Fader
 # exec python3 ~/.config/sway/scripts/swayfader.py      

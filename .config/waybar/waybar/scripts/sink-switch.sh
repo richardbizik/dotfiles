@@ -1,5 +1,5 @@
 #!/bin/bash
-speakers=$(pactl list short sinks | grep HiFi__hw_Audio__sink | awk '{print $2}')
+speakers=$(pactl list short sinks | grep HiFi__Speaker__sink | awk '{print $2}')
 headphones=$(pactl list short sinks | grep stereo-game | awk '{print $$2}')
 arg="${1:-}"
 

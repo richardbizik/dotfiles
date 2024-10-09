@@ -29,14 +29,14 @@ run_rofi() {
 selected="$(run_rofi)"
 case ${selected} in
   area)
-    /usr/share/sway/scripts/grimshot --notify copy area;;
+    grimshot --notify copy area;;
   active)
-    /usr/share/sway/scripts/grimshot --notify copy active;;
+    grimshot --notify copy active;;
   screen)
-    /usr/share/sway/scripts/grimshot --notify copy screen;;
+    grimshot --notify copy screen;;
   window)
-    /usr/share/sway/scripts/grimshot --notify copy window;;
+    grimshot --notify copy window;;
   output)
-    /usr/share/sway/scripts/grimshot --notify copy output;;
+    grimshot --notify copy output;;
 esac
 

@@ -47,7 +47,7 @@ filetype off       " required
 
 " store the plugins in plugged dir
 call plug#begin('~/.config/nvim/plugged')
-Plug 'morhetz/gruvbox'
+Plug 'ellisonleao/gruvbox.nvim'
 Plug 'norcalli/nvim-colorizer.lua'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
@@ -65,12 +65,13 @@ Plug 'hrsh7th/cmp-cmdline'
 Plug 'hrsh7th/nvim-cmp'
 Plug 'rafamadriz/friendly-snippets'
 Plug 'alloyed/lua-lsp'
-Plug 'mfussenegger/nvim-jdtls'
+Plug 'mfussenegger/nvim-jdtls', {'commit': '10691312d51c5485c656a71258b55d3798d3fb3e'}
 
 Plug 'ThePrimeagen/harpoon', {'branch': 'harpoon2'}
 
-Plug 'mfussenegger/nvim-dap', {'tag': '0.3.0'}
+Plug 'mfussenegger/nvim-dap', {'tag': '0.7.0'}
 Plug 'rcarriga/nvim-dap-ui'
+Plug 'nvim-neotest/nvim-nio'
 Plug 'theHamsta/nvim-dap-virtual-text'
 
 Plug 'nvim-telescope/telescope.nvim'
@@ -96,6 +97,7 @@ Plug 'saadparwaiz1/cmp_luasnip'
 Plug 'rafamadriz/friendly-snippets'
 
 Plug 'stevearc/conform.nvim'
+Plug 'cuducos/yaml.nvim'
 
 " Plug 'richardbizik/nvim-toc'
 Plug '/mnt/fast/projects/personal/nvim-toc'
@@ -137,9 +139,8 @@ hi LspDiagnosticsVirtualTextWarning guifg=orange gui=bold,italic,underline
 hi LspDiagnosticsVirtualTextInformation guifg=yellow gui=bold,italic,underline
 hi LspDiagnosticsVirtualTextHint guifg=green gui=bold,italic,underline
 
-autocmd BufWritePre *.go lua vim.lsp.buf.format({async=true})
 autocmd BufWritePre *.go lua goimports(1000)
-autocmd BufWritePre *.templ lua goimports(1000)
+autocmd BufWritePre *.go lua vim.lsp.buf.format({async=false})
 
 
 vmap <silent> <leader>ts :'<,'>!gojson<CR>
@@ -166,6 +167,7 @@ lua << EOF
 require("conform").setup({
   formatters_by_ft = {
     templ = { "templ" },
+    go = { "gopls" },
   },
 })
 local random = math.random

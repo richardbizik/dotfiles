@@ -8,7 +8,7 @@ export PATH="$HOME/.cargo/bin:$PATH"
 export PATH="$PATH:/usr/local/go/bin"
 export GOPATH="/mnt/fast/projects/go"
 export PATH="$PATH:$GOPATH/bin"
-export GOPRIVATE="git.prosoftke.sk"
+export GOPRIVATE="git.ais-servis.cz"
 export JDTLS_HOME="/mnt/fast/projects/jdtls"
 
 dockermem() { docker stats --no-stream --format '{{.MemUsage}}' | awk '{print $1}' | sed 's/B//'| sed 's/\./,/' | numfmt --from=iec-i | awk '{s+=$1} END {print s}' | numfmt --to=iec-i; }

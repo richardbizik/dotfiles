@@ -56,7 +56,11 @@ cmp.setup({
             i = cmp.mapping.abort(),
             c = cmp.mapping.close(),
         }),
-        ['<CR>'] = cmp.mapping.confirm({ select = false }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+        ['<CR>'] = cmp.mapping.confirm({
+            select = false,
+            behavior = cmp.ConfirmBehavior.Insert,
+
+        }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
         ["<C-j>"] = cmp.mapping(function(fallback)
             if cmp.visible() then
                 cmp.select_next_item()
@@ -162,6 +166,10 @@ m.on_attach = function(client, bufnr)
     if client.server_capabilities.documentFormattingProvider then
         buf_set_keymap("n", "ff", "<cmd>lua vim.lsp.buf.format{async=true}<CR>", opts)
     end
+    if client.name == "templ" then
+        buf_set_keymap("n", "ff", "<cmd>lua require(\"conform\").format{async=true}<CR>", opts)
+        return
+    end
 end
 
 nvim_lsp.gopls.setup {
@@ -182,6 +190,10 @@ nvim_lsp.gopls.setup {
                 fieldalignment = true,
                 nilness = true,
                 unusedwrite = true,
+            },
+            hints = {
+                compositeLiteralTypes = false,
+                compositeLiteralFields = false,
             },
             staticcheck = true,
             templateExtensions = { "gotmpl" },
@@ -272,7 +284,7 @@ nvim_lsp.golangci_lint_ls.setup {
     on_attach = m.on_attach,
     capabilities = capabilities,
     init_options = {
-        command = { "golangci-lint", "run", "--enable-all", "--disable", "nosnakecase,varcheck,ifshort,interfacer,golint,structcheck,deadcode,maligned,scopelint,lll,exhaustivestruct,depguard,funlen,forbidigo,wsl,gci,gofumpt,exhaustruct,gochecknoglobals,gomnd,goerr113", "--out-format", "json", "--issues-exit-code=1" },
+        command = { "golangci-lint", "run", "--enable", "errcheck,gosimple,govet,ineffassign,staticcheck,unused,exhaustive,ginkgolinter,gocritic,gosec,wrapcheck", "--out-format", "json", "--issues-exit-code=1" },
     }
 }
 

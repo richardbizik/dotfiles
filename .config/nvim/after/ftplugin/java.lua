@@ -1,7 +1,7 @@
 local set = vim.opt -- set options
-set.tabstop = 2
-set.softtabstop = 2
-set.shiftwidth = 2
+set.tabstop = 4
+set.softtabstop = 4
+set.shiftwidth = 4
 set.expandtab = true
 set.autoread = true
 local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
@@ -169,6 +169,10 @@ local config = {
                     {
                         name = "JavaSE-17",
                         path = "/usr/lib/jvm/java-17-temurin/",
+                    },
+                    {
+                        name = "JavaSE-21",
+                        path = "/usr/lib/jvm/java-21-temurin/",
                     },
                 },
             },

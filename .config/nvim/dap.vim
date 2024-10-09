@@ -166,6 +166,14 @@ local function setup_go_configuration(dap)
     },
     {
       type = "go",
+      name = "Attach (remote)",
+      mode = "remote",
+      request = "attach",
+			port = 4300,
+			host = "localhost",
+    },
+    {
+      type = "go",
       name = "Debug main",
       request = "launch",
       program = "${workspaceFolder}/main.go",
@@ -200,6 +208,14 @@ local function debug_test(testname)
   -- match the exact test name
   local test_regex = "^"..testname.."$"
   local dap = load_module("dap")
+	local confFile = ""
+	local defaultService = get_default_service()
+	if defaultService ~= "" then
+    confFile = "${workspaceFolder}/conf/"..defaultService.."/conf-test.yaml"
+	else
+    confFile = "${workspaceFolder}/conf-test.yaml"
+	end 
+
   dap.run({
       type = "go",
       name = testname,
@@ -209,7 +225,7 @@ local function debug_test(testname)
       args = {"-test.run", test_regex},
       env = {
         PROFILE="TEST",
-        CONFIG_FILE="${workspaceFolder}/conf/"..get_default_service().."/conf-test.yaml"
+        CONFIG_FILE=confFile,
       }
   })
 end
