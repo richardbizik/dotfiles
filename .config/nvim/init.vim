@@ -51,10 +51,11 @@ Plug 'ellisonleao/gruvbox.nvim'
 Plug 'norcalli/nvim-colorizer.lua'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
-Plug 'preservim/nerdtree'
 Plug 'ryanoasis/vim-devicons'
 Plug 'mkitt/tabline.vim'
 Plug 'mbbill/undotree'
+Plug 'stevearc/oil.nvim'
+
 
 Plug 'neovim/nvim-lspconfig'
 Plug 'onsails/lspkind-nvim'
@@ -124,12 +125,12 @@ source ~/.config/nvim/telescope.vim
 source ~/.config/nvim/harpoon.lua
 source ~/.config/nvim/harpoon.lua
 source ~/.config/nvim/lualine.vim
-source ~/.config/nvim/nerdtree.vim
 source ~/.config/nvim/dap.vim
 source ~/.config/nvim/secret.vim
 
 lua require("Comment").setup()
 lua require("lsp_config")
+lua require("explorer")
 lua require("templ")
 lua require("colorizer").setup()
 lua require("nvim-toc").setup()
@@ -196,7 +197,8 @@ vim.api.nvim_create_user_command('PathToClipboard',
     { nargs = 0 }
 )
 
-vim.keymap.set("v", "<SC-J>", ":m '>+1<CR>gv=gv")
-vim.keymap.set("v", "<SC-K>", ":m '<-2<CR>gv=gv")
+vim.keymap.set("v", "<C-j>", ":m '>+1<CR>gv=gv")
+vim.keymap.set("v", "<C-k>", ":m '<-2<CR>gv=gv")
+vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
 EOF
 

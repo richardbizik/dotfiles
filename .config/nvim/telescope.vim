@@ -1,9 +1,9 @@
 
 "Telescope setup
 nnoremap <C-p> <cmd>Telescope find_files<cr>
-nnoremap <leader>fg <cmd>Telescope live_grep<cr>
-nnoremap <leader>fb <cmd>Telescope buffers<cr>
-nnoremap <leader>fh <cmd>Telescope help_tags<cr>
+" nnoremap <leader>fg <cmd>Telescope live_grep<cr>
+" nnoremap <leader>fb <cmd>Telescope buffers<cr>
+" nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 nnoremap <leader>ff <cmd>lua require('telescope.builtin').find_files()<cr>
 nnoremap <leader>fr <cmd>lua require('telescope.builtin').lsp_references()<cr>
 nnoremap <leader>fd <cmd>lua require('telescope.builtin').diagnostics({severity="Error"})<cr>
@@ -53,8 +53,8 @@ end
 require('telescope').load_extension('fzf')
 require("telescope").setup {
   defaults = {
-    path_display = {"smart"},
-    buffer_preview_marker = new_marker, 
+    -- path_display = {""},
+    buffer_preview_marker = new_maker, 
     mappings = {
         i = {
             ["<C-k>"] = actions.move_selection_previous,

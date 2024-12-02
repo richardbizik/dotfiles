@@ -15,13 +15,13 @@ exec hash dbus-update-activation-environment 2>/dev/null && \
 # Welcome App
 exec dex -a -s /etc/xdg/autostart/:~/.config/autostart/  
 
+exec sleep 5
 exec /home/riso/start_virt_webcam.sh
 
 exec kitty
 exec steam
 exec signal-desktop
 exec discord
-exec spotify
 exec chromium
 
 # Sway Fader

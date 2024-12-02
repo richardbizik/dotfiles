@@ -14,5 +14,4 @@ export JDTLS_HOME="/mnt/fast/projects/jdtls"
 dockermem() { docker stats --no-stream --format '{{.MemUsage}}' | awk '{print $1}' | sed 's/B//'| sed 's/\./,/' | numfmt --from=iec-i | awk '{s+=$1} END {print s}' | numfmt --to=iec-i; }
 
 alias vim=nvim
-alias gpureload="sudo rmmod nvidia_uvm ; sudo modprobe nvidia_uvm"
 xset r rate 200 25
