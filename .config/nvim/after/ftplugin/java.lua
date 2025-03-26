@@ -27,6 +27,23 @@ local lombok_path = home_path .. "/dev/lsp/lombok/lombok.jar"
 local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ":p:h:t")
 local jdtls_data_path = home_path .. "/java_workspace/" .. project_name
 
+local dap = require "dap"
+dap.configurations.java = {
+    {
+        javaExec = "java",
+        name="Launch",
+        request = "launch",
+        type = "java",
+    },
+    {
+        type = "java",
+        request = "attach",
+        name = "Debug (Attach) - Remote",
+        hostName = "127.0.0.1",
+        port = 5005,
+    },
+}
+
 local function format_using_make()
     local pos = vim.api.nvim_win_get_cursor(0)
     if vim.bo.modified then
@@ -100,7 +117,6 @@ local function on_attach(client, bufnr)
 
     -- Set some keybinds conditional on server capabilities
     local format_exit = os.execute("make -q format") / 256
-    print(format_exit)
     if format_exit ~= 2 then
         local opts = { noremap = true, silent = true }
         vim.keymap.set('n', 'ff', format_using_make, opts)

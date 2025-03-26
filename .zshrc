@@ -14,6 +14,11 @@ export ZSH="/home/riso/.oh-my-zsh"
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
 ZSH_THEME="powerlevel10k/powerlevel10k"
 
+# Set history
+HISTSIZE=500000
+SAVEHIST=$HISTSIZE
+setopt hist_ignore_all_dups
+
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=240"

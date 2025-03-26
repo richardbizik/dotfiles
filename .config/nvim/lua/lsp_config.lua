@@ -132,6 +132,7 @@ m.on_attach = function(client, bufnr)
     -- Mappings.
     vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
     vim.keymap.set('n', 'ca', vim.lsp.buf.code_action, bufopts)
+    vim.keymap.set('v', '<leader>ca', vim.lsp.buf.code_action, bufopts)
     vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
     vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, bufopts)
     vim.keymap.set('n', '<leader>wa', vim.lsp.buf.add_workspace_folder, bufopts)
@@ -187,7 +188,6 @@ nvim_lsp.gopls.setup {
                 unusedparams = true,
                 unreachable = true,
                 shadow = true,
-                fieldalignment = true,
                 nilness = true,
                 unusedwrite = true,
             },
@@ -303,7 +303,7 @@ local servers = {
     'volar',
     'lua_ls',
     'pyright',
-    'tsserver',
+    'ts_ls',
     'eslint',
     'svelte',
     'html',

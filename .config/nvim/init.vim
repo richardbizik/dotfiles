@@ -70,7 +70,7 @@ Plug 'mfussenegger/nvim-jdtls', {'commit': '10691312d51c5485c656a71258b55d3798d3
 
 Plug 'ThePrimeagen/harpoon', {'branch': 'harpoon2'}
 
-Plug 'mfussenegger/nvim-dap', {'tag': '0.7.0'}
+Plug 'mfussenegger/nvim-dap' ", {'tag': '0.7.0'}
 Plug 'rcarriga/nvim-dap-ui'
 Plug 'nvim-neotest/nvim-nio'
 Plug 'theHamsta/nvim-dap-virtual-text'
@@ -106,8 +106,6 @@ call plug#end()
 
 let g:NERDTreeChDirMode = 2
 let g:tablineclosebutton=1
-" select the color scheme
-colorscheme gruvbox
 " go hightlights
 let g:go_highlight_build_constraints = 1
 let g:go_highlight_extra_types = 1
@@ -130,6 +128,7 @@ source ~/.config/nvim/secret.vim
 
 lua require("Comment").setup()
 lua require("lsp_config")
+lua require("dap_config")
 lua require("explorer")
 lua require("templ")
 lua require("colorizer").setup()
@@ -165,6 +164,17 @@ augroup XML
 augroup END
 
 lua << EOF
+require("gruvbox").setup({
+  italic = {
+    strings = false,
+    emphasis = true,
+    comments = false,
+    operators = false,
+    folds = true,
+  },
+})
+vim.cmd("colorscheme gruvbox")
+
 require("conform").setup({
   formatters_by_ft = {
     templ = { "templ" },
