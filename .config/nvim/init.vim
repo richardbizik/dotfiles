@@ -80,7 +80,6 @@ Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
 Plug 'nvim-telescope/telescope-ui-select.nvim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'nvim-treesitter/nvim-treesitter-context'
-Plug 'nvim-treesitter/playground'
 Plug 'nvim-lua/plenary.nvim'
 
 Plug 'numToStr/Comment.nvim'
@@ -99,6 +98,8 @@ Plug 'rafamadriz/friendly-snippets'
 
 Plug 'stevearc/conform.nvim'
 Plug 'cuducos/yaml.nvim'
+
+Plug 'mistweaverco/kulala.nvim'
 
 " Plug 'richardbizik/nvim-toc'
 Plug '/mnt/fast/projects/personal/nvim-toc'
@@ -121,7 +122,6 @@ let g:go_auto_type_info = 1
 lua require("treesitter")
 source ~/.config/nvim/telescope.vim
 source ~/.config/nvim/harpoon.lua
-source ~/.config/nvim/harpoon.lua
 source ~/.config/nvim/lualine.vim
 source ~/.config/nvim/dap.vim
 source ~/.config/nvim/secret.vim
@@ -131,6 +131,7 @@ lua require("lsp_config")
 lua require("dap_config")
 lua require("explorer")
 lua require("templ")
+lua require("kulala").setup({global_keymaps=true})
 lua require("colorizer").setup()
 lua require("nvim-toc").setup()
 

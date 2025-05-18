@@ -1,8 +1,8 @@
 # Assign workspaces
-assign [app_id="chromium" title="misc"] 3
+assign [app_id="brave" title="misc"] 3
 # for_window [class="Chromium"] focus
 
-assign [app_id="chromium" title="main"] 4
+assign [app_id="brave" title="main"] 4
 # for_window [class="Chromium"] focus
 
 assign [class="Spotify"] 2

@@ -7,6 +7,7 @@ nnoremap <C-p> <cmd>Telescope find_files<cr>
 nnoremap <leader>ff <cmd>lua require('telescope.builtin').find_files()<cr>
 nnoremap <leader>fr <cmd>lua require('telescope.builtin').lsp_references()<cr>
 nnoremap <leader>fd <cmd>lua require('telescope.builtin').diagnostics({severity="Error"})<cr>
+nnoremap <leader>fw <cmd>lua require('telescope.builtin').diagnostics({severity= { min = "Warn"} })<cr>
 nnoremap <leader>fg <cmd>lua require('telescope.builtin').live_grep()<cr>
 nnoremap <leader>fb <cmd>lua require('telescope.builtin').buffers()<cr>
 nnoremap <leader>fh <cmd>lua require('telescope.builtin').help_tags()<cr>

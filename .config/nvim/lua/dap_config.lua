@@ -22,26 +22,6 @@ local subtests_query = [[
   (#eq? @run "Run")) @parent
 ]]
 
--- getting default service for nghis projects
-local function get_default_service()
-    local filename = "Makefile"
-    local line = 7
-    local directory = vim.fn.getcwd()
-    local f = io.open(directory .. "/" .. filename, "rb")
-    if f == nil then return "" end
-    local i = 1
-    for l in io.lines(filename) do
-        if i == line then
-            if string.len(l) > 18 then
-                return string.sub(l, 18)
-            else
-                return ""
-            end
-        end
-        i = i + 1
-    end
-end
-
 local function load_module(module_name)
     local ok, module = pcall(require, module_name)
     assert(ok, string.format('dap-go dependency error: %s not installed', module_name))
@@ -99,40 +79,12 @@ local function setup_go_adapter(dap)
 end
 
 local function setup_go_configuration(dap, conf)
-    local service = get_default_service()
-    if service ~= nil then
-        print("Running as: " .. service)
-    else
-        service = "other"
-    end
     dap.configurations.go = {
         {
             type = "go",
             name = "Debug",
             request = "launch",
             program = "${file}",
-        },
-        {
-            type = "go",
-            name = "Debug test (generator)",
-            request = "launch",
-            mode = "test",
-            program = "${workspaceFolder}/test/rest",
-            env = {
-                PROFILE = "TEST",
-                CONFIG_FILE = "${workspaceFolder}/conf/" .. service .. "/conf-test.yaml"
-            }
-        },
-        {
-            type = "go",
-            name = "Debug main (generator)",
-            request = "launch",
-            program = "${workspaceFolder}/cmd/" .. service .. "/main.go",
-            env = {
-                PROFILE = "DEV",
-                LOG_LEVEL = "DEBUG",
-                CONFIG_FILE = "${workspaceFolder}/conf/" .. service .. "/conf-dev.yaml"
-            }
         },
         {
             type = "go",
@@ -232,10 +184,10 @@ local function debug_test(testname)
     -- match the exact test name
     local test_regex = "^" .. testname .. "$"
     local dap = load_module("dap")
+    local conf = read_config()
     local confFile = ""
-    local defaultService = get_default_service()
-    if defaultService ~= "" then
-        confFile = "${workspaceFolder}/conf/" .. defaultService .. "/conf-test.yaml"
+    if conf.dapTest.config ~= "" then
+        confFile = conf.dapTest.config
     else
         confFile = "${workspaceFolder}/conf-test.yaml"
     end
@@ -296,61 +248,65 @@ local function is_parent(dest, source)
 end
 
 local function get_closest_test()
-    local stop_row = vim.api.nvim_win_get_cursor(0)[1]
-    local ft = vim.api.nvim_buf_get_option(0, 'filetype')
-    assert(ft == 'go', 'dap-go error: can only debug go files, not ' .. ft)
-    local parser = vim.treesitter.get_parser(0)
-    local root = (parser:parse()[1]):root()
+  local stop_row = vim.api.nvim_win_get_cursor(0)[1]
+  local ft = vim.api.nvim_buf_get_option(0, "filetype")
+  assert(ft == "go", "can only find test in go files, not " .. ft)
+  local parser = vim.treesitter.get_parser(0)
+  local root = (parser:parse()[1]):root()
 
-    local test_tree = {}
+  local test_tree = {}
 
-    local test_query = query.parse(ft, tests_query)
-    assert(test_query, 'dap-go error: could not parse test query')
-    for _, match, _ in test_query:iter_matches(root, 0, 0, stop_row) do
-        local test_match = {}
-        for id, node in pairs(match) do
-            local capture = test_query.captures[id]
-            if capture == "testname" then
-                local name = treesitter.get_node_text(node, 0)
-                test_match.name = name
-            end
-            if capture == "parent" then
-                test_match.node = node
-            end
+  local test_query = vim.treesitter.query.parse(ft, tests_query)
+  assert(test_query, "could not parse test query")
+  for _, match, _ in test_query:iter_matches(root, 0, 0, stop_row, { all = true }) do
+    local test_match = {}
+    for id, nodes in pairs(match) do
+      for _, node in ipairs(nodes) do
+        local capture = test_query.captures[id]
+        if capture == "testname" then
+          local name = vim.treesitter.get_node_text(node, 0)
+          test_match.name = name
         end
-        table.insert(test_tree, test_match)
-    end
-
-    local subtest_query = query.parse(ft, subtests_query)
-    assert(subtest_query, 'dap-go error: could not parse test query')
-    for _, match, _ in subtest_query:iter_matches(root, 0, 0, stop_row) do
-        local test_match = {}
-        for id, node in pairs(match) do
-            local capture = subtest_query.captures[id]
-            if capture == "testname" then
-                local name = treesitter.get_node_text(node, 0)
-                test_match.name = string.gsub(string.gsub(name, ' ', '_'), '"', '')
-            end
-            if capture == "parent" then
-                test_match.node = node
-            end
+        if capture == "parent" then
+          test_match.node = node
         end
-        table.insert(test_tree, test_match)
+      end
     end
+    table.insert(test_tree, test_match)
+  end
 
-    table.sort(test_tree, function(a, b)
-        return is_parent(a.node, b.node)
-    end)
-
-    for _, parent in ipairs(test_tree) do
-        for _, child in ipairs(test_tree) do
-            if is_parent(parent.node, child.node) then
-                child.parent = parent.name
-            end
+  local subtest_query = vim.treesitter.query.parse(ft, subtests_query)
+  assert(subtest_query, "could not parse test query")
+  for _, match, _ in subtest_query:iter_matches(root, 0, 0, stop_row, { all = true }) do
+    local test_match = {}
+    for id, nodes in pairs(match) do
+      for _, node in ipairs(nodes) do
+        local capture = subtest_query.captures[id]
+        if capture == "testname" then
+          local name = vim.treesitter.get_node_text(node, 0)
+          test_match.name = string.gsub(string.gsub(name, " ", "_"), '"', "")
         end
+        if capture == "parent" then
+          test_match.node = node
+        end
+      end
     end
+    table.insert(test_tree, test_match)
+  end
 
-    return get_closest_above_cursor(test_tree)
+  table.sort(test_tree, function(a, b)
+    return is_parent(a.node, b.node)
+  end)
+
+  for _, parent in ipairs(test_tree) do
+    for _, child in ipairs(test_tree) do
+      if is_parent(parent.node, child.node) then
+        child.parent = parent.name
+      end
+    end
+  end
+
+  return get_closest_above_cursor(test_tree)
 end
 
 function dap_g.debug_test()
@@ -414,8 +370,9 @@ require("dapui").setup({
     },
     windows = { indent = 1 },
 })
-require("nvim-dap-virtual-text").setup {
-    only_first_definition = true,
-    all_references = false,
-    show_stop_reason = true,
-}
+
+-- require("nvim-dap-virtual-text").setup {
+--     only_first_definition = true,
+--     all_references = false,
+--     show_stop_reason = true,
+-- }
